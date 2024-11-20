@@ -32,6 +32,7 @@
     color: #13adb7;
     padding: 20px 20px;
     border-radius: 5px;
+    font-size: 3rem;
 }
 .donateButton:hover {
     cursor: pointer;

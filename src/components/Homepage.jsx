@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import forestImg from "../assets/images/treeBg.jpeg";
 import "../styles/Homepage.css";
@@ -49,7 +50,9 @@ export default function Homepage() {
         <div className="homepageWrapper">
             <div className="intro">
                 <img className="forestImg" src={forestImg} />
-                <Logo className="logo" />
+                <Link className="toHome" to="/">
+                    <Logo className="logo" />
+                </Link>
                 <div className="heading">
                     <div className="headingWords">
                         <span className="headingWord1">Blockchain </span>
