@@ -5,10 +5,12 @@ export default function ProjectOverview(props) {
         <div className="ProjectOverviewWrapper">
             <img src={oceanCleanup} className="projectImage" />
             <div className="projectOverview">
-                <div className="projectDate">{props.projectDate}</div>
-                <div className="projectTitle">{props.projectTitle}</div>
-                <div className="projectDescription">
-                    {props.projectDescription}
+                <div className="projectOverviewText">
+                    <div className="projectDate">{props.projectDate}</div>
+                    <div className="projectTitle">{props.projectTitle}</div>
+                    <div className="projectDescription">
+                        {props.projectDescription}
+                    </div>
                 </div>
                 <button className="donateButton">Donate Now</button>
             </div>

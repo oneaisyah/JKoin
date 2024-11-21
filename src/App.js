@@ -3,12 +3,21 @@ import {
   RouterProvider
 } from "react-router-dom";
 import './App.css';
-import DonationPage from './components/DonationPage';
-import Homepage from "./components/Homepage";
+import CreateProjectPage from "./components/CreateProjectPage.jsx";
+import DonationPage from './components/DonationPage.jsx';
+import Homepage from "./components/Homepage.jsx";
 
 function App() {
+
+  //insert api call to backend
+  const projectData = {
+    projectDateArr: JSON.parse(process.env.REACT_APP_PROJECT_DATEARR),
+    projectTitleArr: JSON.parse(process.env.REACT_APP_PROJECT_TITLEARR),
+    projectDescriptionArr: JSON.parse(process.env.REACT_APP_PROJECT_DESCARR),
+  };
+
   const router = createBrowserRouter([
-    { path: "/", element: <Homepage /> }, { path: "/project", element: <DonationPage /> }
+    { path: "/", element: <Homepage {...projectData} /> }, { path: "/project", element: <DonationPage /> }, { path: "/createProject", element: <CreateProjectPage /> }
   ])
   return (
     <div className="App">
