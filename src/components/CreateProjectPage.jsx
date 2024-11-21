@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/CreateProjectPage.css";
+
 export default function CreateProjectPage() {
     const [formData, setFormData] = useState({
         backgroundInfo: "",
@@ -11,6 +12,23 @@ export default function CreateProjectPage() {
         shortDescription: "",
         projectDuration: "",
     });
+    const [userAddress, setUserAddress] = useState(null);
+
+    useEffect(() => {
+        if (window.ethereum) {
+            window.ethereum
+                .request({ method: "eth_requestAccounts" })
+                .then((accounts) => {
+                    setUserAddress(accounts[0]);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("Please connect to MetaMask to use this feature.");
+                });
+        } else {
+            alert("Please install MetaMask to interact with this page.");
+        }
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -26,8 +44,26 @@ export default function CreateProjectPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Submitted Data:", formData);
-        // Handle form submission logic here
+        // Handle form submission logic here, possibly involving smart contracts
     };
+
+    if (!userAddress) {
+        return (
+            <div className="connect-wallet">
+                <h2>Please connect your wallet</h2>
+                <button
+                    onClick={() =>
+                        window.ethereum.request({
+                            method: "eth_requestAccounts",
+                        })
+                    }
+                >
+                    Connect Wallet
+                </button>
+            </div>
+        );
+    }
+
     return (
         <div className="formWrapper">
             <Link className="toHome" to="/">

@@ -6,7 +6,7 @@ import './App.css';
 import CreateProjectPage from "./components/CreateProjectPage.jsx";
 import DonationPage from './components/DonationPage.jsx';
 import Homepage from "./components/Homepage.jsx";
-
+import UploadImageProof from "./components/UploadImageProof.jsx";
 function App() {
 
   //insert api call to backend
@@ -17,7 +17,7 @@ function App() {
   };
 
   const router = createBrowserRouter([
-    { path: "/", element: <Homepage {...projectData} /> }, { path: "/project", element: <DonationPage /> }, { path: "/createProject", element: <CreateProjectPage /> }
+    { path: "/", element: <Homepage {...projectData} /> }, { path: "/project", element: <DonationPage /> }, { path: "/createProject", element: <CreateProjectPage /> }, { path: "/uploadProof", element: <UploadImageProof /> }
   ])
   return (
     <div className="App">
