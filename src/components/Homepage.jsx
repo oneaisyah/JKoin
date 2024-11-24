@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import forestImg from "../assets/images/treeBg.jpeg";
 import "../styles/Homepage.css";
+import getAllProjects from "../utilities/getAllProjects";
 import ProjectOverview from "./ProjectOverview";
 export default function Homepage({
     projectDateArr,
@@ -25,6 +26,7 @@ export default function Homepage({
         }
         return projectOverviewArr;
     }
+    console.log(getAllProjects());
     return (
         <div className="homepageWrapper">
             <div className="intro">

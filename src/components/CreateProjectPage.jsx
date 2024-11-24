@@ -2,32 +2,88 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/CreateProjectPage.css";
+import { createProject } from "../utilities/projectFactory";
+import { uploadFile } from "../utilities/uploadFiles";
+import web3 from "../utilities/web3";
 
 export default function CreateProjectPage() {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            console.log(formData);
+            const {
+                projectName,
+                coverPhoto,
+                backgroundInfo,
+                projectDetails,
+                projectDuration,
+                goalAmount,
+            } = formData;
+
+            const coverPhotoObject = await uploadFile(coverPhoto);
+            const coverPhotoCID = coverPhotoObject.toString();
+            const goalAmountInWei = web3.utils.toWei(goalAmount, "ether");
+
+            console.log("Inputs for createProject:", {
+                title: projectName,
+                description: projectDetails,
+                backgroundInfo,
+                coverPhotoCID,
+                durationInSeconds: projectDuration * 60 * 60,
+                goalAmount: goalAmountInWei,
+            });
+            // Call the createProject function with the mapped data
+            const txHash = await createProject(
+                projectName,
+                projectDetails,
+                backgroundInfo,
+                coverPhotoCID,
+                projectDuration,
+                goalAmountInWei,
+                userAddress
+            );
+
+            console.log("Transaction Hash:", txHash);
+        } catch (err) {
+            console.error("Error creating project:", err);
+        }
+    };
+
     const [formData, setFormData] = useState({
-        backgroundInfo: "",
-        coverPhoto: null,
         projectName: "",
+        coverPhoto: null,
+        backgroundInfo: "",
         projectDetails: "",
-        shortDescription: "",
         projectDuration: "",
+        amountToRaise: "",
     });
+    const [fileName, setFileName] = useState(""); // State for the file name
     const [userAddress, setUserAddress] = useState(null);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    // Function to connect wallet
+    const connectWallet = async () => {
+        if (window.ethereum) {
+            try {
+                const accounts = await window.ethereum.request({
+                    method: "eth_requestAccounts",
+                });
+                setUserAddress(accounts[0]);
+                setErrorMessage(""); // Clear any previous error message
+            } catch (error) {
+                console.error("Error connecting wallet:", error);
+                setErrorMessage("Failed to connect wallet. Please try again.");
+            }
+        } else {
+            setErrorMessage(
+                "MetaMask is not installed. Please install it to interact with this page."
+            );
+        }
+    };
 
     useEffect(() => {
-        if (window.ethereum) {
-            window.ethereum
-                .request({ method: "eth_requestAccounts" })
-                .then((accounts) => {
-                    setUserAddress(accounts[0]);
-                })
-                .catch((err) => {
-                    console.error(err);
-                    alert("Please connect to MetaMask to use this feature.");
-                });
-        } else {
-            alert("Please install MetaMask to interact with this page.");
-        }
+        connectWallet();
     }, []);
 
     const handleInputChange = (e) => {
@@ -39,25 +95,20 @@ export default function CreateProjectPage() {
         const { name } = e.target;
         const file = e.target.files[0];
         setFormData({ ...formData, [name]: file });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Submitted Data:", formData);
-        // Handle form submission logic here, possibly involving smart contracts
+        setFileName(file ? file.name : ""); // Update file name state
     };
 
     if (!userAddress) {
         return (
             <div className="connect-wallet">
+                <Link className="toHome" to="/">
+                    <Logo className="logo" />
+                </Link>
                 <h2>Please connect your wallet</h2>
-                <button
-                    onClick={() =>
-                        window.ethereum.request({
-                            method: "eth_requestAccounts",
-                        })
-                    }
-                >
+                {errorMessage && (
+                    <p className="error-message">{errorMessage}</p>
+                )}
+                <button className="connectWalletButton" onClick={connectWallet}>
                     Connect Wallet
                 </button>
             </div>
@@ -73,36 +124,7 @@ export default function CreateProjectPage() {
                 onSubmit={handleSubmit}
                 style={{ maxWidth: "600px", margin: "auto" }}
             >
-                <h2>Create Project</h2>
-                {/* Background Information */}
-                <div>
-                    <label htmlFor="backgroundInfo">
-                        Background Information:
-                    </label>
-                    <textarea
-                        id="backgroundInfo"
-                        name="backgroundInfo"
-                        value={formData.backgroundInfo}
-                        onChange={handleInputChange}
-                        placeholder="Provide background information"
-                        required
-                    />
-                </div>
-
-                {/* Cover Photo */}
-                <div>
-                    <label htmlFor="coverPhoto">Cover Photo:</label>
-                    <input
-                        type="file"
-                        id="coverPhoto"
-                        name="coverPhoto"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        required
-                    />
-                </div>
-
-                {/* Project Name */}
+                <h1>Create Project</h1>
                 <div>
                     <label htmlFor="projectName">Project Name:</label>
                     <input
@@ -115,8 +137,34 @@ export default function CreateProjectPage() {
                         required
                     />
                 </div>
+                <div>
+                    <label htmlFor="coverPhoto">Cover Photo:</label>
+                    <input
+                        type="file"
+                        id="coverPhoto"
+                        name="coverPhoto"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        required
+                    />
+                    {fileName && (
+                        <p className="file-name">Selected File: {fileName}</p>
+                    )}
+                </div>
+                <div>
+                    <label htmlFor="backgroundInfo">
+                        Background Information:
+                    </label>
+                    <textarea
+                        id="backgroundInfo"
+                        name="backgroundInfo"
+                        value={formData.backgroundInfo}
+                        onChange={handleInputChange}
+                        placeholder="Provide background information about your organization"
+                        required
+                    />
+                </div>
 
-                {/* Project Details */}
                 <div>
                     <label htmlFor="projectDetails">Project Details:</label>
                     <textarea
@@ -129,23 +177,9 @@ export default function CreateProjectPage() {
                     />
                 </div>
 
-                {/* Short Description */}
-                <div>
-                    <label htmlFor="shortDescription">Short Description:</label>
-                    <textarea
-                        id="shortDescription"
-                        name="shortDescription"
-                        value={formData.shortDescription}
-                        onChange={handleInputChange}
-                        placeholder="Provide a short summary of the project"
-                        required
-                    />
-                </div>
-
-                {/* Estimated Project Duration */}
                 <div>
                     <label htmlFor="projectDuration">
-                        Estimated Project Duration:
+                        Estimated Project Duration (in days):
                     </label>
                     <input
                         type="text"
@@ -153,11 +187,24 @@ export default function CreateProjectPage() {
                         name="projectDuration"
                         value={formData.projectDuration}
                         onChange={handleInputChange}
-                        placeholder="e.g., 3 weeks, 2 months"
+                        placeholder="e.g., 15 days, 30 days"
                         required
                     />
                 </div>
-
+                <div className="goalAmount">
+                    <label htmlFor="goalAmount">
+                        Amount to Raise (in ethers):
+                    </label>
+                    <input
+                        type="number"
+                        id="goalAmount"
+                        name="goalAmount"
+                        value={formData.goalAmount}
+                        onChange={handleInputChange}
+                        placeholder="e.g., 1, 2"
+                        required
+                    />
+                </div>
                 <button type="submit">Submit</button>
             </form>
         </div>
