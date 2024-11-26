@@ -1,9 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import beachImage from "../assets/images/beachCleanup.jpeg";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/DonationPage.css";
 export default function DonationPage() {
-    const navigate = useNavigate();
     return (
         <div className="donationPageWrapper">
             <div className="logoWrapper">
