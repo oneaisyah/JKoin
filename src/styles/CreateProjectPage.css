@@ -1,0 +1,137 @@
+/* CreateProjectPage.css */
+h1 {
+    color: #000;
+}
+.formWrapper {
+    width: 100%;
+    padding: 50px 50px;
+}
+.connect-wallet {
+    color: black;
+}
+.file-name {
+    margin-top: 5px;
+    font-size: 14px;
+    color: red;
+}
+.connectWalletButton {
+    appearance: none;
+    background-color: #000000;
+    border: 2px solid #1a1a1a;
+    border-radius: 15px;
+    box-sizing: border-box;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    min-height: 60px;
+    min-width: 0;
+    outline: none;
+    padding: 16px 24px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 100%;
+    will-change: transform;
+}
+
+.connectWalletButton:disabled {
+    pointer-events: none;
+}
+
+.connectWalletButton:hover {
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+}
+
+.connectWalletButton:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
+/* General form container styling */
+form {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 80%;
+    font-family: Arial, sans-serif;
+}
+
+/* Header styling */
+form h2 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Label styling */
+form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+/* Input and textarea styling */
+form input,
+form textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+/* Hover and focus effects for inputs and textareas */
+form input:focus,
+form textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Textarea height */
+form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Button styling */
+form button {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for button */
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Form group styling for spacing */
+form div {
+    margin-bottom: 15px;
+}

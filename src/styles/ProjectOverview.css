@@ -3,8 +3,17 @@
     width: 30%;
     text-align: left;
     border-radius: 3px;
+    display: flex;
+    flex-direction: column;
 }
 .projectOverview {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* This centers the children horizontally in the flex container */
+    justify-content: space-between; /* Adjusts spacing between children vertically */
+    height: 100%;
+}
+.projectOverviewText {
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -27,11 +36,13 @@
     color: #7b7d8c;
 }
 .donateButton {
-    margin-top: 5%;
+    margin-bottom: 2%;
     border: 1px solid #13adb7;
     color: #13adb7;
     padding: 20px 20px;
     border-radius: 5px;
+    font-size: 2rem;
+    width: 80%;
 }
 .donateButton:hover {
     cursor: pointer;
