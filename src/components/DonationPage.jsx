@@ -22,6 +22,11 @@ export default function DonationPage() {
                             />
                             <button className="donateButton">Donate</button>
                         </div>
+                        <Link to="/uploadProof">
+                            <button className="donateButton">
+                                Upload Proof
+                            </button>
+                        </Link>
                         <div className="amountRaised">
                             $9850 raised so far! It's your turn to make a
                             difference!
