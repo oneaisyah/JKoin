@@ -1,4 +1,6 @@
 import Web3 from "web3";
+import pLimit from 'p-limit';
+const limit = pLimit(5);
 
 // Replace with your deployed ProjectFactory contract's ABI and address
 const projectFactoryABI = [
@@ -118,7 +120,8 @@ export default async function getAllProjects() {
 
         // Step 2: Iterate over each project address and fetch its data
         const projectsData = await Promise.all(
-            projectAddresses.map(async (address) => {
+            projectAddresses.map((address) => 
+                limit(async() => {
                 const project = new web3.eth.Contract(projectABI, address);
 
                 // Fetch data from the Project contract
@@ -141,7 +144,7 @@ export default async function getAllProjects() {
                     owner,
                 };
             })
-        );
+        ));
 
         console.log("Projects Data:", projectsData);
         return projectsData;
