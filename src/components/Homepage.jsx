@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import forestImg from "../assets/images/treeBg.jpeg";
-import { useState, useEffect } from "react";
 import "../styles/Homepage.css";
 import fetchImageFromCID from "../utilities/fetchImageFromCID";
 import getAllProjects from "../utilities/getAllProjects";
@@ -53,6 +52,7 @@ export default function Homepage() {
     }, []);
 
     function generateProjectsList() {
+        console.log(projects);
         return projects.map((project, index) => (
             <ProjectOverview
                 key={index}
@@ -60,7 +60,10 @@ export default function Homepage() {
                 projectAddress={project.address}
                 projectTitle={project.title}
                 projectDescription={project.description}
+                projectBackgroundInfo={project.backgroundInfo}
                 projectImage={project.image} // Pass the image URL
+                projectOwner={project.owner}
+                isOwner={project.isOwner}
             />
         ));
     }

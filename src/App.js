@@ -18,11 +18,11 @@ function App() {
   const projDataLength = JSON.stringify(projectData["projectTitleArr"].length)
 
   const router = createBrowserRouter([
-    { path: "/", element: <Homepage {...projectData} /> },
-    { path: "/donation/:projectAddress", element: <DonationPage /> },
+    { path: "/", element: <Homepage /> },
+    { path: "/donation/:projectTitle", element: <DonationPage /> },
     { path: "/project", element: <DonationPage /> },
     { path: "/createProject", element: <CreateProjectPage projDataLength={projDataLength}/> },
-    { path: "/uploadProof", element: <UploadImageProof /> }
+    { path: "/uploadProof/:projectTitle", element: <UploadImageProof /> }
   ])
   return (
     <div className="App">
