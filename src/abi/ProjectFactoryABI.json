@@ -1,0 +1,30 @@
+[
+    {
+        "inputs": [],
+        "name": "getDeployedProjects",
+        "outputs": [{ "internalType": "contract Project[]", "name": "", "type": "address[]" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "name": "deployedProjects",
+        "outputs": [{ "internalType": "contract Project", "name": "", "type": "address" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "string", "name": "title", "type": "string" },
+            { "internalType": "string", "name": "description", "type": "string" },
+            { "internalType": "string", "name": "backgroundInfo", "type": "string" },
+            { "internalType": "string", "name": "coverPhotoCID", "type": "string" },
+            { "internalType": "uint256", "name": "goalAmount", "type": "uint256" },
+            { "internalType": "uint256", "name": "durationInSeconds", "type": "uint256" }
+        ],
+        "name": "createProject",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

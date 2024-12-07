@@ -1,23 +1,25 @@
 .ProjectOverviewWrapper {
     background-color: #ffffff;
-    width: 30%;
+    width: 25%;
     text-align: left;
     border-radius: 3px;
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
 }
 .projectOverview {
     display: flex;
     flex-direction: column;
-    align-items: center; /* This centers the children horizontally in the flex container */
     justify-content: space-between; /* Adjusts spacing between children vertically */
     height: 100%;
+    gap: 1rem;
 }
 .projectOverviewText {
-    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.5rem;
+    overflow: hidden;
 }
 .projectImage {
     width: 100%;
@@ -30,19 +32,20 @@
 .projectTitle {
     font-size: 2rem;
     color: #0f111d;
+    text-overflow: ellipsis;
 }
 .projectDescription {
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: #7b7d8c;
 }
 .donateButton {
-    margin-bottom: 2%;
     border: 1px solid #13adb7;
     color: #13adb7;
     padding: 20px 20px;
     border-radius: 5px;
-    font-size: 2rem;
-    width: 80%;
+    font-size: 1.5rem;
+    text-decoration: none;
+    text-align: center;
 }
 .donateButton:hover {
     cursor: pointer;

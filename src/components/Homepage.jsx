@@ -52,6 +52,7 @@ export default function Homepage() {
     }, []);
 
     function generateProjectsList() {
+        console.log(projects);
         return projects.map((project, index) => (
             <ProjectOverview
                 key={index}
@@ -59,7 +60,10 @@ export default function Homepage() {
                 projectAddress={project.address}
                 projectTitle={project.title}
                 projectDescription={project.description}
+                projectBackgroundInfo={project.backgroundInfo}
                 projectImage={project.image} // Pass the image URL
+                projectOwner={project.owner}
+                isOwner={project.isOwner}
             />
         ));
     }
@@ -76,9 +80,7 @@ export default function Homepage() {
                     <Logo className="logo" />
                 </Link>
                 <Link className="toCreateProject" to="/createProject">
-                    <button className="createProjectButton">
-                        Create Project
-                    </button>
+                    <button className="createProjectButton">Create Project</button>
                 </Link>
                 <div className="heading">
                     <div className="headingWords">
@@ -86,9 +88,7 @@ export default function Homepage() {
                         <span className="headingWord2">for </span>
                         <span className="headingWord3">earth. </span>
                     </div>
-                    <div className="subHeading">
-                        Join us on Our Green Journey
-                    </div>
+                    <div className="subHeading">Join us on Our Green Journey</div>
                 </div>
             </div>
             <div className="currentProjects">

@@ -1,9 +1,61 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import beachImage from "../assets/images/beachCleanup.jpeg";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/DonationPage.css";
+import Web3 from "web3";
+import { useState } from "react";
+import projectABI from "../abi/ProjectABI.json";
+
 export default function DonationPage() {
     const { projectTitle } = useParams();
+    const location = useLocation();
+    const { projectAddress, projectDescription, projectOwner, projectBackgroundInfo, isOwner } = location.state || {};
+    const [isConnecting, setIsConnecting] = useState(false);
+    const [donationAmount, setDonationAmount] = useState(0);
+    const [loading, setLoading] = useState(true);
+
+    const navigate = useNavigate();
+
+    const handleUploadProofClick = () => {
+        console.log("Upload proof clicked");
+        navigate(`/uploadProof/${projectTitle}`, { state: { isOwner: isOwner } });
+    }
+
+    const handleDonateClick = async () => {
+        if (!window.ethereum) {
+            alert("Please install MetaMask to donate.");
+            return;
+        }
+
+        if (isConnecting) {
+            alert("Please wait for the connection to complete. Check MetaMask.");
+            return;
+        }
+
+        setIsConnecting(true);
+
+        try {
+            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+            const account = accounts[0];
+            console.log("Account:", account);
+            console.log("projectAddress:", projectAddress);
+
+            const web3 = new Web3(window.ethereum);
+            const project = new web3.eth.Contract(projectABI, projectAddress);
+
+            const transaction = await project.methods.fund().send({
+                from: account,
+                value: web3.utils.toWei(donationAmount, "ether"),
+            });
+
+            console.log("Transaction:", transaction);
+            alert("Donation successful!");
+        } catch (error) {
+            console.error("Error donating:", error);
+            alert("Error donating. Please try again.");
+        }
+        setIsConnecting(false);
+    }
 
     return (
         <div className="donationPageWrapper">
@@ -11,6 +63,9 @@ export default function DonationPage() {
                 <Link className="toHome" to="/">
                     <Logo className="logo2" />
                 </Link>
+                <button className="uploadButton" onClick={handleUploadProofClick}>
+                    Upload Proof
+                </button>
             </div>
             <div className="title">Donation for Project: {projectTitle}</div>
             <div className="middleSectionWrapper">
@@ -18,15 +73,28 @@ export default function DonationPage() {
                     <img className="projImage" src={beachImage} alt="" />
                     <div className="donationSection">
                         <div className="donationBox">
-                            <input className="donationInput" placeholder="AMOUNT" />
-                            <button className="donateButton">Donate</button>
+                            <input
+                                className="donationInput"
+                                placeholder="AMOUNT"
+                                onChange={(e) => setDonationAmount(e.target.value)}
+                                value={donationAmount}
+                                type="number"
+                            />
+                            <button className="donateButton" onClick={handleDonateClick}>Donate</button>
                         </div>
-                        <Link to="/uploadProof">
-                            <button className="donateButton">Upload Proof</button>
-                        </Link>
                         <div className="amountRaised">
                             $9850 raised so far! It's your turn to make a difference!
                         </div>
+                    </div>
+                    <div>
+                        {/* {checkOwner() && (
+                                <Link to={`/uploadProof/${projectTitle}`}>
+                                    <button className="donateButton" onClick={handleUploadProofClick}>
+                                        Upload Proof
+                                    </button>
+                                </Link>
+                            )} */}
+
                     </div>
                 </div>
             </div>
@@ -36,13 +104,13 @@ export default function DonationPage() {
                         Background of the Sustainability Organization
                     </div>
                     <div className="backgroundSubheading">
-                        Organization Name: Clean Earth Collective
+                        Organization Name: {projectOwner}
                     </div>
                 </div>
                 <div className="projectInfo">
                     <div className="projectHeading">Full Project Description</div>
                     <div className="projectSubheading">
-                        Full details of the project with the address {projectTitle} will go here.
+                        {projectBackgroundInfo}
                     </div>
                 </div>
             </div>
