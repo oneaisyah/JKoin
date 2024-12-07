@@ -9,7 +9,7 @@ export async function makeStorageClient() {
         const principal = Signer.parse(process.env.REACT_APP_KEY);
         const store = new StoreMemory();
         const client = await Client.create({ principal, store });
-
+        console.log(process.env.REACT_APP_PROOF)
         const proof = await Proof.parse(process.env.REACT_APP_PROOF);
         const space = await client.addSpace(proof);
         await client.setCurrentSpace(space.did());
@@ -22,13 +22,13 @@ export async function makeStorageClient() {
 }
 
 // Function to upload a file to Web3.Storage
-export async function uploadFile(file) {
+export async function uploadFiles(files) {
     try {
-        if (!file) {
+        if (!files) {
             throw new Error("No file provided for upload");
         }
         const client = await makeStorageClient();
-        const directoryCid = await client.uploadFile(file);
+        const directoryCid = await client.uploadDirectory(files);
         return directoryCid;
     } catch (error) {
         console.error("Error uploading file:", error);

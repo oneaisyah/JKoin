@@ -15,12 +15,13 @@ function App() {
     projectTitleArr: JSON.parse(process.env.REACT_APP_PROJECT_TITLEARR),
     projectDescriptionArr: JSON.parse(process.env.REACT_APP_PROJECT_DESCARR),
   };
+  const projDataLength = JSON.stringify(projectData["projectTitleArr"].length)
 
   const router = createBrowserRouter([
-    { path: "/", element: <Homepage {...projectData} /> }, 
-    { path: "/donation/:projectAddress", element: <DonationPage /> },  
-    { path: "/project", element: <DonationPage /> }, 
-    { path: "/createProject", element: <CreateProjectPage /> }, 
+    { path: "/", element: <Homepage {...projectData} /> },
+    { path: "/donation/:projectAddress", element: <DonationPage /> },
+    { path: "/project", element: <DonationPage /> },
+    { path: "/createProject", element: <CreateProjectPage projDataLength={projDataLength}/> },
     { path: "/uploadProof", element: <UploadImageProof /> }
   ])
   return (

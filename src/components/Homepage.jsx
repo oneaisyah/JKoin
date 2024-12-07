@@ -10,6 +10,8 @@ import ProjectOverview from "./ProjectOverview";
 export default function Homepage() {
     const [projects, setProjects] = useState([]); // Store project data with images
     const [loading, setLoading] = useState(true); // Loading state
+    const hardCodedCid =
+        "bafybeiecljye4dvylbmjd33bhqnrdb2xsejcy2oqdkufszselaqjjjis2a";
 
     useEffect(() => {
         async function fetchProjects() {
@@ -30,14 +32,14 @@ export default function Homepage() {
                         }
 
                         // CHANGEEE, second
-                        const image = await fetchImageFromCID(
-                            "bafybeic23yo2flckgbu5hdhcninilg2qaz5qtgfajug2cih7byltidog4e",
+                        const { imageUrl, jsonData } = await fetchImageFromCID(
+                            hardCodedCid,
                             0
                         );
-                        return { ...project, image };
+                        return { ...project, image: imageUrl, jsonData };
                     })
                 );
-
+                console.log(projectsWithImages);
                 setProjects(projectsWithImages); // Update state with projects
             } catch (error) {
                 console.error("Error fetching projects:", error);
@@ -105,78 +107,3 @@ export default function Homepage() {
         </div>
     );
 }
-
-// export default function Homepage({
-//     projectDateArr,
-//     projectTitleArr,
-//     projectDescriptionArr,
-// }) {
-//     // function generateProjectsList(
-//     //     projectDateArr,
-//     //     projectTitleArr,
-//     //     projectDescriptionArr
-//     // ) {
-//     //     let projectOverviewArr = [];
-//     //     for (let i = 0; i < projectDateArr.length; i++) {
-//     //         projectOverviewArr.push(
-//     //             <ProjectOverview
-//     //                 projectDate={projectDateArr[i]}
-//     //                 projectTitle={projectTitleArr[i]}
-//     //                 projectDescription={projectDescriptionArr[i]}
-//     //             />
-//     //         );
-//     //     }
-//     //     return projectOverviewArr;
-//     // }
-//     function generateProjectsList() {
-//         return projects.map((project) => (
-//             <ProjectOverview
-//                 key={project.address} // Use a unique identifier, such as the project address
-//                 projectDate={project.endDate} // Assuming endDate as project date
-//                 projectTitle={project.title}
-//                 projectDescription={project.description}
-//                 projectImage={project.image} // Pass the image URL
-//             />
-//         ));
-//     }
-//     console.log(getAllProjects());
-//     return (
-//         <div className="homepageWrapper">
-//             <div className="intro">
-//                 <img className="forestImg" src={forestImg} />
-//                 <Link className="toHome" to="/">
-//                     <Logo className="logo" />
-//                 </Link>
-//                 <Link className="toCreateProject" to="/createProject">
-//                     <button className="createProjectButton">
-//                         Create Project
-//                     </button>
-//                 </Link>
-//                 <div className="heading">
-//                     <div className="headingWords">
-//                         <span className="headingWord1">Blockchain </span>
-//                         <span className="headingWord2">for </span>
-//                         <span className="headingWord3">earth. </span>
-//                     </div>
-//                     <div className="subHeading">
-//                         Join us on Our Green Journey
-//                     </div>
-//                 </div>
-//             </div>
-//             <div className="currentProjects">
-//                 <div className="currentProjectsText">
-//                     <span className="currentWord">Current </span>
-//                     <span className="projectsWord">Projects</span>
-//                 </div>
-//                 {/* <div className="currentProjectsDescription"></div> */}
-//                 <div className="allProjectsOverview">
-//                     {generateProjectsList(
-//                         projectDateArr,
-//                         projectTitleArr,
-//                         projectDescriptionArr
-//                     )}
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }

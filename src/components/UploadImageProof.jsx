@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/UploadImageProof.css";
-import { uploadFile } from "../utilities/uploadFiles.js";
+import { uploadFiles } from "../utilities/uploadFiles.js";
 
 export default function UploadImageProof() {
     const [file, setFile] = useState(null);
@@ -16,7 +16,7 @@ export default function UploadImageProof() {
 
     const handleUpload = async () => {
         try {
-            const cid = await uploadFile(file);
+            const cid = await uploadFiles(file);
             console.log("File uploaded with CID:", cid);
             alert(`Upload successful! CID: ${cid}`);
         } catch (error) {
