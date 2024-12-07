@@ -1,27 +1,11 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import forestImg from "../assets/images/treeBg.jpeg";
-import { useState, useEffect } from "react";
 import "../styles/Homepage.css";
+import fetchImageFromCID from "../utilities/fetchImageFromCID";
 import getAllProjects from "../utilities/getAllProjects";
 import ProjectOverview from "./ProjectOverview";
-
-async function fetchImageFromCID(cid){
-    if (!cid || typeof cid !== "string") {
-        console.error("Invalid CID:", cid);
-        return null;
-    }
-    const gatewayURL = `https://cloudflare-ipfs.com/ipfs/${cid}`;
-
-    try {
-        const response = await fetch(gatewayURL);
-        if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`);
-        return gatewayURL; // Return the gateway URL directly
-    } catch (error) {
-        console.error("Error fetching image from IPFS:", error);
-        return null;
-    }
-}
 
 export default function Homepage() {
     const [projects, setProjects] = useState([]); // Store project data with images
@@ -32,15 +16,24 @@ export default function Homepage() {
             try {
                 // Step 1: Fetch project data
                 const projectData = await getAllProjects();
-
+                //remove
+                const projIndex = "metrology.jpg";
                 // Step 2: Fetch images for each project
                 const projectsWithImages = await Promise.all(
-                    projectData.map(async (project) => {
+                    projectData.map(async (project, index) => {
                         if (!project.coverPhotoCID) {
-                            console.warn("Missing CID for project:", project);
+                            console.warn(
+                                `Missing CID for project at index ${index}:`,
+                                project
+                            );
                             return { ...project, image: null };
                         }
-                        const image = await fetchImageFromCID(project.coverPhotoCID);
+
+                        // CHANGEEE, second
+                        const image = await fetchImageFromCID(
+                            "bafybeic23yo2flckgbu5hdhcninilg2qaz5qtgfajug2cih7byltidog4e",
+                            0
+                        );
                         return { ...project, image };
                     })
                 );
@@ -61,7 +54,7 @@ export default function Homepage() {
             <ProjectOverview
                 key={index}
                 projectDate={project.endDate} // Assuming endDate as project date
-                projectAddress={project.address} 
+                projectAddress={project.address}
                 projectTitle={project.title}
                 projectDescription={project.description}
                 projectImage={project.image} // Pass the image URL
@@ -72,12 +65,18 @@ export default function Homepage() {
     return (
         <div className="homepageWrapper">
             <div className="intro">
-                <img className="forestImg" src={forestImg} alt="Background Forest" />
+                <img
+                    className="forestImg"
+                    src={forestImg}
+                    alt="Background Forest"
+                />
                 <Link className="toHome" to="/">
                     <Logo className="logo" />
                 </Link>
                 <Link className="toCreateProject" to="/createProject">
-                    <button className="createProjectButton">Create Project</button>
+                    <button className="createProjectButton">
+                        Create Project
+                    </button>
                 </Link>
                 <div className="heading">
                     <div className="headingWords">
@@ -85,7 +84,9 @@ export default function Homepage() {
                         <span className="headingWord2">for </span>
                         <span className="headingWord3">earth. </span>
                     </div>
-                    <div className="subHeading">Join us on Our Green Journey</div>
+                    <div className="subHeading">
+                        Join us on Our Green Journey
+                    </div>
                 </div>
             </div>
             <div className="currentProjects">
