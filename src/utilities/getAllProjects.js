@@ -1,5 +1,5 @@
-import Web3 from "web3";
 import pLimit from 'p-limit';
+import Web3 from "web3";
 const limit = pLimit(2);
 
 // Replace with your deployed ProjectFactory contract's ABI and address
@@ -130,32 +130,46 @@ async function fetchWithRetry(fn, retries = 5, delay = 2000) {
     }
 }
 
+let cachedProjects = null; // Cache to store project data
+
 export default async function getAllProjects() {
+    if (cachedProjects) {
+        console.log("Returning cached projects...");
+        return cachedProjects; // Return cached data
+    }
+
     try {
-        // Step 1: Get all deployed project addresses
         console.log("Fetching deployed projects...");
         const projectAddresses = await projectFactory.methods.getDeployedProjects().call();
         console.log("Project Addresses:", projectAddresses);
 
-        // Step 2: Fetch data for each project
         const projectsData = [];
         for (const address of projectAddresses) {
             await limit(async () => {
                 const project = new web3.eth.Contract(projectABI, address);
                 const title = await fetchWithRetry(() => project.methods.title().call());
-                const description = await fetchWithRetry(() => project.methods.description().call());
-                const backgroundInfo = await fetchWithRetry(() => project.methods.backgroundInfo().call());
-                const coverPhotoCID = await fetchWithRetry(() => project.methods.coverPhotoCID().call());
-                const goalAmount = await fetchWithRetry(() => project.methods.goalAmount().call());
-                const currentAmount = await fetchWithRetry(() => project.methods.currentAmount().call());
-                const owner = await fetchWithRetry(() => project.methods.owner().call());
-                const endDate = await fetchWithRetry(() => project.methods.endDate().call()); // Unix timestamp
-                // const durationInSeconds = await fetchWithRetry(() => project.methods.durationInSeconds().call());
 
-                // Calculate project deadline with 1-month buffer
-                // const oneMonthInSeconds = 30 * 24 * 60 * 60;
-                // const adjustedEndDate = parseInt(endDate) + oneMonthInSeconds;
-                // const remainingTimeInSeconds = Math.max(0, adjustedEndDate - Math.floor(Date.now() / 1000));
+                await sleep(1500); // Adjust delay if needed
+                const description = await fetchWithRetry(() => project.methods.description().call());
+                await sleep(1500); // Adjust delay if needed
+                const backgroundInfo = await fetchWithRetry(() => project.methods.backgroundInfo().call());
+
+                await sleep(1500); // Adjust delay if needed
+                const coverPhotoCID = await fetchWithRetry(() => project.methods.coverPhotoCID().call());
+
+                await sleep(1500); // Adjust delay if needed
+                const goalAmount = await fetchWithRetry(() => project.methods.goalAmount().call());
+
+                await sleep(1500); // Adjust delay if needed
+                const currentAmount = await fetchWithRetry(() => project.methods.currentAmount().call());
+
+                await sleep(1500); // Adjust delay if needed
+                const owner = await fetchWithRetry(() => project.methods.owner().call());
+
+                await sleep(1500); // Adjust delay if needed
+                const endDate = await fetchWithRetry(() => project.methods.endDate().call());
+
+                await sleep(1500); // Adjust delay if needed
 
                 projectsData.push({
                     address,
@@ -169,51 +183,14 @@ export default async function getAllProjects() {
                 });
 
                 // Add a delay between requests to avoid rate limits
-                await sleep(1500); // Adjust delay if needed
             });
         }
 
         console.log("Projects Data:", projectsData);
+        cachedProjects = projectsData; // Cache the data for future calls
         return projectsData;
     } catch (error) {
         console.error("Error fetching projects:", error);
         throw error;
     }
-    //     // Step 2: Iterate over each project address and fetch its data
-    //     const projectsData = await Promise.all(
-    //         projectAddresses.map((address) => 
-    //             limit(async() => {
-    //             const project = new web3.eth.Contract(projectABI, address);
-
-    //             await sleep(200);
-    //             // Fetch data from the Project contract
-    //             const title = await project.methods.title().call();
-    //             const description = await project.methods.description().call();
-    //             const backgroundInfo = await project.methods.backgroundInfo().call();
-    //             const coverPhotoCID = await project.methods.coverPhotoCID().call();
-    //             const goalAmount = await web3.utils.fromWei(await project.methods.goalAmount().call(), "ether");
-    //             const currentAmount = await web3.utils.fromWei(await project.methods.currentAmount().call(), "ether");
-    //             const owner = await project.methods.owner().call();
-
-    //             return {
-    //                 address,
-    //                 title,
-    //                 description,
-    //                 backgroundInfo,
-    //                 coverPhotoCID,
-    //                 goalAmount,
-    //                 currentAmount,
-    //                 owner,
-    //             };
-    //         })
-    //     ));
-
-    //     console.log("Projects Data:", projectsData);
-    //     return projectsData;
-    // } catch (error) {
-    //     console.error("Error fetching projects:", error);
-    //     throw error;
-    // }
 }
-
-getAllProjects();

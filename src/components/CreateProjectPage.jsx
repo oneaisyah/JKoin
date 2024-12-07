@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/CreateProjectPage.css";
 import { createProject } from "../utilities/projectFactory";
-import { uploadFile } from "../utilities/uploadFiles";
+import { uploadFiles } from "../utilities/uploadFiles";
 import web3 from "../utilities/web3";
 
-export default function CreateProjectPage() {
+export default function CreateProjectPage({projDataLength}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -21,25 +21,40 @@ export default function CreateProjectPage() {
                 goalAmount,
             } = formData;
 
-            const coverPhotoObject = await uploadFile(coverPhoto);
-            const coverPhotoCID = coverPhotoObject.toString();
+            const renamedCoverPhoto = new File(
+                [coverPhoto],
+                `${projDataLength}-cover.jpg`, // New name with project name
+                { type: coverPhoto.type } // Preserve original file type
+            );
+            const formDataToSave = {
+                projectName,
+                backgroundInfo,
+                projectDetails,
+                projectDuration,
+                goalAmount,
+            };
+            const formDataJson = new File(
+                [JSON.stringify(formDataToSave, null, 2)],
+                `${projectName.replace(/\s+/g, "_")}-data.json`,
+                { type: "application/json" }
+            );
+
+            const filesToUpload = [renamedCoverPhoto, formDataJson];
+
+            const directoryCid = await uploadFiles(filesToUpload);
+            console.log("Uploaded directory CID:", directoryCid);
+            console.log(directoryCid.toString());
+            // const coverPhotoObject = await uploadFiles(renamedCoverPhoto);
+            // const coverPhotoCID = coverPhotoObject.toString();
+            // console.log(coverPhotoCID);
             const goalAmountInWei = web3.utils.toWei(goalAmount, "ether");
 
             console.log("Inputs for createProject:", {
-                title: projectName,
-                description: projectDetails,
-                backgroundInfo,
-                coverPhotoCID,
-                durationInSeconds: projectDuration * 60 * 60,
-                goalAmount: goalAmountInWei,
+                directory: directoryCid,
             });
             // Call the createProject function with the mapped data
             const txHash = await createProject(
-                projectName,
-                projectDetails,
-                backgroundInfo,
-                coverPhotoCID,
-                projectDuration,
+                directoryCid,
                 goalAmountInWei,
                 userAddress
             );
