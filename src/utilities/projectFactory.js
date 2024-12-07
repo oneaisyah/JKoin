@@ -1,4 +1,5 @@
 import web3 from "./web3.js";
+import { uploadFile } from "./web3Storage.js";
 
 // const abi = process.env.REACT_APP_CONTRACT_ABI;
 const abi = [{ "inputs": [{ "internalType": "string", "name": "title", "type": "string" }, { "internalType": "string", "name": "description", "type": "string" }, { "internalType": "string", "name": "backgroundInfo", "type": "string" }, { "internalType": "string", "name": "coverPhotoCID", "type": "string" }, { "internalType": "uint256", "name": "goalAmount", "type": "uint256" }, { "internalType": "uint256", "name": "durationInSeconds", "type": "uint256" }], "name": "createProject", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "deployedProjects", "outputs": [{ "internalType": "contract Project", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "getDeployedProjects", "outputs": [{ "internalType": "contract Project[]", "name": "", "type": "address[]" }], "stateMutability": "view", "type": "function" }]
@@ -24,8 +25,19 @@ export const createProject = async (
 
         console.log("Using MetaMask account:", sender);
 
+        const metadata = {
+            title,
+            description,
+            backgroundInfo, // This can contain additional details
+            coverPhotoCID,
+        };
 
         console.log("Cover Photo CID:", coverPhotoCID);
+        console.log("Uploading metadata to Web3.Storage...");
+        const jsonBlob = new Blob([JSON.stringify(metadata)], { type: "application/json" });
+        const metadataCID = await uploadFile(jsonBlob);
+        console.log("Metadata uploaded to Web3.Storage. CID:", metadataCID);
+
 
         // Convert duration to seconds
         const durationInSeconds = durationInMonths * 30 * 24 * 60 * 60; // Approximate seconds in a month
@@ -33,6 +45,7 @@ export const createProject = async (
         const goalAmountInWei = web3.utils.toWei(goalAmount.toString(), "ether"); // Convert ETH to Wei
 
         console.log("Duration in seconds:", durationInSeconds);
+        console.log("Goal amount in Wei:", goalAmountInWei);
 
         // Estimate gas for the transaction
         const gasEstimate = await projectFactory.methods

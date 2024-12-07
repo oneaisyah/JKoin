@@ -17,7 +17,11 @@ function App() {
   };
 
   const router = createBrowserRouter([
-    { path: "/", element: <Homepage {...projectData} /> }, { path: "/project", element: <DonationPage /> }, { path: "/createProject", element: <CreateProjectPage /> }, { path: "/uploadProof", element: <UploadImageProof /> }
+    { path: "/", element: <Homepage {...projectData} /> }, 
+    { path: "/donation/:projectAddress", element: <DonationPage /> },  
+    { path: "/project", element: <DonationPage /> }, 
+    { path: "/createProject", element: <CreateProjectPage /> }, 
+    { path: "/uploadProof", element: <UploadImageProof /> }
   ])
   return (
     <div className="App">

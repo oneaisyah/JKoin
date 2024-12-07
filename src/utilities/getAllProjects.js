@@ -1,4 +1,6 @@
+import pLimit from 'p-limit';
 import Web3 from "web3";
+const limit = pLimit(2);
 
 // Replace with your deployed ProjectFactory contract's ABI and address
 const projectFactoryABI = [
@@ -110,45 +112,85 @@ const web3 = new Web3(new Web3.providers.HttpProvider(provider));
 // Create a ProjectFactory contract instance
 const projectFactory = new web3.eth.Contract(projectFactoryABI, projectFactoryAddress);
 
-export default async function getAllProjects() {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Helper function: Retry with exponential backoff
+async function fetchWithRetry(fn, retries = 5, delay = 2000) {
     try {
-        // Step 1: Get all deployed project addresses
+        return await fn();
+    } catch (err) {
+        if (err.message.includes("Too Many Requests") && retries > 0) {
+            console.warn(`Rate limit hit. Retrying in ${delay}ms...`);
+            await sleep(delay);
+            return fetchWithRetry(fn, retries - 1, delay * 2); // Retry with increased delay
+        }
+        throw err; // Throw other errors
+    }
+}
+
+let cachedProjects = null; // Cache to store project data
+
+export default async function getAllProjects() {
+    if (cachedProjects) {
+        console.log("Returning cached projects...");
+        return cachedProjects; // Return cached data
+    }
+
+    try {
+        console.log("Fetching deployed projects...");
         const projectAddresses = await projectFactory.methods.getDeployedProjects().call();
         console.log("Project Addresses:", projectAddresses);
 
-        // Step 2: Iterate over each project address and fetch its data
-        const projectsData = await Promise.all(
-            projectAddresses.map(async (address) => {
+        const projectsData = [];
+        for (const address of projectAddresses) {
+            await limit(async () => {
                 const project = new web3.eth.Contract(projectABI, address);
+                const title = await fetchWithRetry(() => project.methods.title().call());
 
-                // Fetch data from the Project contract
-                const title = await project.methods.title().call();
-                const description = await project.methods.description().call();
-                const backgroundInfo = await project.methods.backgroundInfo().call();
-                const coverPhotoCID = await project.methods.coverPhotoCID().call();
-                const goalAmount = await web3.utils.fromWei(await project.methods.goalAmount().call(), "ether");
-                const currentAmount = await web3.utils.fromWei(await project.methods.currentAmount().call(), "ether");
-                const owner = await project.methods.owner().call();
+                await sleep(1500); // Adjust delay if needed
+                const description = await fetchWithRetry(() => project.methods.description().call());
+                await sleep(1500); // Adjust delay if needed
+                const backgroundInfo = await fetchWithRetry(() => project.methods.backgroundInfo().call());
 
-                return {
+                await sleep(1500); // Adjust delay if needed
+                const coverPhotoCID = await fetchWithRetry(() => project.methods.coverPhotoCID().call());
+
+                await sleep(1500); // Adjust delay if needed
+                const goalAmount = await fetchWithRetry(() => project.methods.goalAmount().call());
+
+                await sleep(1500); // Adjust delay if needed
+                const currentAmount = await fetchWithRetry(() => project.methods.currentAmount().call());
+
+                await sleep(1500); // Adjust delay if needed
+                const owner = await fetchWithRetry(() => project.methods.owner().call());
+
+                await sleep(1500); // Adjust delay if needed
+                const endDate = await fetchWithRetry(() => project.methods.endDate().call());
+
+                await sleep(1500); // Adjust delay if needed
+
+                projectsData.push({
                     address,
                     title,
                     description,
                     backgroundInfo,
                     coverPhotoCID,
-                    goalAmount,
-                    currentAmount,
+                    goalAmount: web3.utils.fromWei(goalAmount, "ether"),
+                    currentAmount: web3.utils.fromWei(currentAmount, "ether"),
                     owner,
-                };
-            })
-        );
+                });
+
+                // Add a delay between requests to avoid rate limits
+            });
+        }
 
         console.log("Projects Data:", projectsData);
+        cachedProjects = projectsData; // Cache the data for future calls
         return projectsData;
     } catch (error) {
         console.error("Error fetching projects:", error);
         throw error;
     }
 }
-
-getAllProjects();
