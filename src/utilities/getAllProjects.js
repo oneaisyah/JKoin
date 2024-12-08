@@ -6,104 +6,356 @@ const limit = pLimit(2);
 // Replace with your deployed ProjectFactory contract's ABI and address
 const projectFactoryABI = [
     {
-        "inputs": [],
-        "name": "getDeployedProjects",
-        "outputs": [{ "internalType": "contract Project[]", "name": "", "type": "address[]" }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-        "name": "deployedProjects",
-        "outputs": [{ "internalType": "contract Project", "name": "", "type": "address" }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
         "inputs": [
-            { "internalType": "string", "name": "title", "type": "string" },
-            { "internalType": "string", "name": "description", "type": "string" },
-            { "internalType": "string", "name": "backgroundInfo", "type": "string" },
-            { "internalType": "string", "name": "coverPhotoCID", "type": "string" },
-            { "internalType": "uint256", "name": "goalAmount", "type": "uint256" },
-            { "internalType": "uint256", "name": "durationInSeconds", "type": "uint256" }
+            {
+                "internalType": "string",
+                "name": "projectCID",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "goalAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "durationInSeconds",
+                "type": "uint256"
+            }
         ],
         "name": "createProject",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "deployedProjects",
+        "outputs": [
+            {
+                "internalType": "contract Project",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getDeployedProjects",
+        "outputs": [
+            {
+                "internalType": "contract Project[]",
+                "name": "",
+                "type": "address[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     }
-];
+]
 
 
-const projectFactoryAddress = "0xA5dcD5C337c80b0126248c25Ca711a3c4F48A8F0";
 
 // Replace with your Project contract's ABI
 const projectABI = [
     {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_owner",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "_projectCID",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_goalAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_durationInSeconds",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
         "inputs": [],
-        "name": "title",
-        "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+        "name": "canWithdraw",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
         "stateMutability": "view",
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "description",
-        "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "backgroundInfo",
-        "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "coverPhotoCID",
-        "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "goalAmount",
-        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "contributions",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
         "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [],
         "name": "currentAmount",
-        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "owner",
-        "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
         "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [],
         "name": "endDate",
-        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "fund",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "donor",
+                "type": "address"
+            }
+        ],
+        "name": "getContribution",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getProjectDetails",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "goalAmount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "isFundingActive",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "isRefundActive",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "projectCID",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "proofPhotoCID",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "proofUploadDate",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
         "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [],
         "name": "refundDeadline",
-        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
         "stateMutability": "view",
         "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "requestRefund",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_proofPhotoCID",
+                "type": "string"
+            }
+        ],
+        "name": "uploadProof",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     }
-];
+]
 
 
 // Initialize Web3
@@ -111,7 +363,7 @@ const provider = `https://sepolia.infura.io/v3/${process.env.REACT_APP_INFURIA_A
 const web3 = new Web3(new Web3.providers.HttpProvider(provider));
 
 // Create a ProjectFactory contract instance
-const projectFactory = new web3.eth.Contract(projectFactoryABI, projectFactoryAddress);
+const projectFactory = new web3.eth.Contract(projectFactoryABI, process.env.REACT_APP_CONTRACT_ADDRESS);
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -148,7 +400,7 @@ async function fetchWithRetry(fn, retries = 5, delay = 2000) {
 
 let cachedProjects = null; // Cache to store project data
 
-export default async function getAllProjects() {
+export default async function getAllProjectAddresses() {
     if (cachedProjects) {
         console.log("Returning cached projects...");
         return cachedProjects; // Return cached data
@@ -158,54 +410,7 @@ export default async function getAllProjects() {
         console.log("Fetching deployed projects...");
         const projectAddresses = await projectFactory.methods.getDeployedProjects().call();
         console.log("Project Addresses:", projectAddresses);
-
-        const projectsData = [];
-        for (const address of projectAddresses) {
-            await limit(async () => {
-                const project = new web3.eth.Contract(projectABI, address);
-                const title = await fetchWithRetry(() => project.methods.title().call());
-
-                await sleep(1500); // Adjust delay if needed
-                const description = await fetchWithRetry(() => project.methods.description().call());
-                await sleep(1500); // Adjust delay if needed
-                const backgroundInfo = await fetchWithRetry(() => project.methods.backgroundInfo().call());
-
-                await sleep(1500); // Adjust delay if needed
-                const coverPhotoCID = await fetchWithRetry(() => project.methods.coverPhotoCID().call());
-
-                await sleep(1500); // Adjust delay if needed
-                const goalAmount = await fetchWithRetry(() => project.methods.goalAmount().call());
-
-                await sleep(1500); // Adjust delay if needed
-                const currentAmount = await fetchWithRetry(() => project.methods.currentAmount().call());
-
-                await sleep(1500); // Adjust delay if needed
-                const owner = await fetchWithRetry(() => project.methods.owner().call());
-                const isOwner = (owner === address);
-
-                await sleep(1500); // Adjust delay if needed
-                const endDate = await fetchWithRetry(() => project.methods.endDate().call());
-
-                await sleep(1500); // Adjust delay if needed
-
-                projectsData.push({
-                    address,
-                    title,
-                    description,
-                    backgroundInfo,
-                    coverPhotoCID,
-                    goalAmount: web3.utils.fromWei(goalAmount, "ether"),
-                    currentAmount: web3.utils.fromWei(currentAmount, "ether"),
-                    owner,
-                });
-
-                // Add a delay between requests to avoid rate limits
-            });
-        }
-
-        console.log("Projects Data:", projectsData);
-        cachedProjects = projectsData; // Cache the data for future calls
-        return projectsData;
+        return projectAddresses;
     } catch (error) {
         console.error("Error fetching projects:", error);
         throw error;
