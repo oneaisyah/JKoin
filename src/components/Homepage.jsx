@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import forestImg from "../assets/images/treeBg.jpeg";
 import "../styles/Homepage.css";
-import fetchImageFromCID from "../utilities/fetchImageFromCID";
-import getAllProjects from "../utilities/getAllProjects";
+import fetchDataFromCID from "../utilities/fetchDataFromCID";
+import getAllProjectAddresses from "../utilities/getAllProjects";
+import getCIDAndEndDateFromAddress from "../utilities/getCIDFromAddress";
 import ProjectOverview from "./ProjectOverview";
 
 export default function Homepage() {
@@ -17,30 +18,28 @@ export default function Homepage() {
         async function fetchProjects() {
             try {
                 // Step 1: Fetch project data
-                const projectData = await getAllProjects();
+                const projectAddresses = await getAllProjectAddresses();
+                console.log(projectAddresses);
                 //remove
                 const projIndex = "metrology.jpg";
                 // Step 2: Fetch images for each project
-                const projectsWithImages = await Promise.all(
-                    projectData.map(async (project, index) => {
-                        if (!project.coverPhotoCID) {
-                            console.warn(
-                                `Missing CID for project at index ${index}:`,
-                                project
-                            );
-                            return { ...project, image: null };
-                        }
-
-                        // CHANGEEE, second
-                        const { imageUrl, jsonData } = await fetchImageFromCID(
-                            hardCodedCid,
-                            0
+                const projectsDetails = await Promise.allSettled(
+                    projectAddresses.map(async (address) => {
+                        const { endDateObject, projectCID } =
+                            await getCIDAndEndDateFromAddress(address);
+                        console.log(endDateObject, projectCID);
+                        const { imageUrl, jsonData } = await fetchDataFromCID(
+                            projectCID
                         );
-                        return { ...project, image: imageUrl, jsonData };
+                        const mergedJson = { ...jsonData, endDateObject };
+                        console.log(`mergedJson:${JSON.stringify(mergedJson)}`);
+                        return { image: imageUrl, mergedJson };
                     })
                 );
-                console.log(projectsWithImages);
-                setProjects(projectsWithImages); // Update state with projects
+                const successfulProjects = projectsDetails
+                    .filter((result) => result.status === "fulfilled")
+                    .map((result) => result.value);
+                setProjects(successfulProjects);
             } catch (error) {
                 console.error("Error fetching projects:", error);
             } finally {
@@ -56,18 +55,19 @@ export default function Homepage() {
         return projects.map((project, index) => (
             <ProjectOverview
                 key={index}
-                projectDate={project.endDate} // Assuming endDate as project date
-                projectAddress={project.address}
-                projectTitle={project.title}
-                projectDescription={project.description}
-                projectBackgroundInfo={project.backgroundInfo}
-                projectImage={project.image} // Pass the image URL
-                projectOwner={project.owner}
-                isOwner={project.isOwner}
+                projectDate={`End Date: ${JSON.stringify(
+                    project.mergedJson.endDateObject
+                )}`}
+                projectAddress={"Unknown Address"} // Replace with a meaningful value if available
+                projectTitle={project.mergedJson.projectName} // Map to the project name
+                projectDescription={project.mergedJson.projectDetails} // Map to project details
+                projectBackgroundInfo={project.mergedJson.backgroundInfo} // Map to background info
+                projectImage={project.image} // Use the image URL
+                projectOwner={"Unknown Owner"} // Replace with a meaningful value if available
+                isOwner={false} // Default or calculated value
             />
         ));
     }
-
     return (
         <div className="homepageWrapper">
             <div className="intro">
@@ -80,7 +80,9 @@ export default function Homepage() {
                     <Logo className="logo" />
                 </Link>
                 <Link className="toCreateProject" to="/createProject">
-                    <button className="createProjectButton">Create Project</button>
+                    <button className="createProjectButton">
+                        Create Project
+                    </button>
                 </Link>
                 <div className="heading">
                     <div className="headingWords">
@@ -88,7 +90,9 @@ export default function Homepage() {
                         <span className="headingWord2">for </span>
                         <span className="headingWord3">earth. </span>
                     </div>
-                    <div className="subHeading">Join us on Our Green Journey</div>
+                    <div className="subHeading">
+                        Join us on Our Green Journey
+                    </div>
                 </div>
             </div>
             <div className="currentProjects">

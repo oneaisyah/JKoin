@@ -9,7 +9,6 @@ export async function makeStorageClient() {
         const principal = Signer.parse(process.env.REACT_APP_KEY);
         const store = new StoreMemory();
         const client = await Client.create({ principal, store });
-        console.log(process.env.REACT_APP_PROOF)
         const proof = await Proof.parse(process.env.REACT_APP_PROOF);
         const space = await client.addSpace(proof);
         await client.setCurrentSpace(space.did());
