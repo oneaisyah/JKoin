@@ -11,9 +11,6 @@ import ProjectOverview from "./ProjectOverview";
 export default function Homepage() {
     const [projects, setProjects] = useState([]); // Store project data with images
     const [loading, setLoading] = useState(true); // Loading state
-    const hardCodedCid =
-        "bafybeiecljye4dvylbmjd33bhqnrdb2xsejcy2oqdkufszselaqjjjis2a";
-
     useEffect(() => {
         async function fetchProjects() {
             try {
@@ -38,7 +35,10 @@ export default function Homepage() {
                 );
                 const successfulProjects = projectsDetails
                     .filter((result) => result.status === "fulfilled")
-                    .map((result) => result.value);
+                    .map((result, index) => ({
+                        ...result.value,
+                        address: projectAddresses[index],
+                    }));
                 setProjects(successfulProjects);
             } catch (error) {
                 console.error("Error fetching projects:", error);
@@ -58,7 +58,7 @@ export default function Homepage() {
                 projectDate={`End Date: ${JSON.stringify(
                     project.mergedJson.endDateObject
                 )}`}
-                projectAddress={"Unknown Address"} // Replace with a meaningful value if available
+                projectAddress={project.address} // Replace with a meaningful value if available
                 projectTitle={project.mergedJson.projectName} // Map to the project name
                 projectDescription={project.mergedJson.projectDetails} // Map to project details
                 projectBackgroundInfo={project.mergedJson.backgroundInfo} // Map to background info
