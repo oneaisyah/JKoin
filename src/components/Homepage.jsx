@@ -3,68 +3,26 @@ import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import forestImg from "../assets/images/treeBg.jpeg";
 import "../styles/Homepage.css";
-import fetchDataFromCID from "../utilities/fetchDataFromCID";
-import getAllProjectAddresses from "../utilities/getAllProjects";
-import getCIDAndEndDateFromAddress from "../utilities/getCIDFromAddress";
 import ProjectOverview from "./ProjectOverview";
 
-export default function Homepage() {
-    const [projects, setProjects] = useState([]); // Store project data with images
-    const [loading, setLoading] = useState(true); // Loading state
-    const hardCodedCid =
-        "bafybeiecljye4dvylbmjd33bhqnrdb2xsejcy2oqdkufszselaqjjjis2a";
-
-    useEffect(() => {
-        async function fetchProjects() {
-            try {
-                // Step 1: Fetch project data
-                const projectAddresses = await getAllProjectAddresses();
-                console.log("projectAddresses", projectAddresses);
-                //remove
-                const projIndex = "metrology.jpg";
-                // Step 2: Fetch images for each project
-                const projectsDetails = await Promise.allSettled(
-                    projectAddresses.map(async (address) => {
-                        const { endDateObject, projectCID, projectOwner } =
-                            await getCIDAndEndDateFromAddress(address);
-                        console.log(endDateObject, projectCID);
-                        const { imageUrl, jsonData } = await fetchDataFromCID(
-                            projectCID
-                        );
-                        const mergedJson = { ...jsonData, endDateObject };
-                        console.log(`mergedJson:${JSON.stringify(mergedJson)}`);
-                        return { image: imageUrl, mergedJson, projectOwner };
-                    })
-                );
-                const successfulProjects = projectsDetails
-                    .filter((result) => result.status === "fulfilled")
-                    .map((result) => result.value);
-                setProjects(successfulProjects);
-            } catch (error) {
-                console.error("Error fetching projects:", error);
-            } finally {
-                setLoading(false); // End loading state
-            }
-        }
-
-        fetchProjects();
-    }, []);
+export default function Homepage({projects, loading}) {
+    // const hardCodedCid =
+    //     "bafybeiecljye4dvylbmjd33bhqnrdb2xsejcy2oqdkufszselaqjjjis2a";
 
     function generateProjectsList() {
         console.log(projects);
         return projects.map((project, index) => (
             <ProjectOverview
                 key={index}
-                projectDate={`End Date: ${JSON.stringify(
-                    project.mergedJson.endDateObject
-                )}`}
-                projectAddress={"Unknown Address"} // Replace with a meaningful value if available
+                projectDate={`End Date: ${project.mergedJson.endDateObject}`}
+                projectAddress={project.mergedJson.projectAddress} // Replace with a meaningful value if available
                 projectTitle={project.mergedJson.projectName} // Map to the project name
                 projectDescription={project.mergedJson.projectDetails} // Map to project details
                 projectBackgroundInfo={project.mergedJson.backgroundInfo} // Map to background info
                 projectImage={project.image} // Use the image URL
-                projectOwner={project.projectOwner} // Replace with a meaningful value if available
+                projectOwner={project.mergedJson.projectOwner} // Replace with a meaningful value if available
                 isOwner={false} // Default or calculated value
+                totalDonation={project.mergedJson.totalDonation}
             />
         ));
     }
@@ -88,7 +46,7 @@ export default function Homepage() {
                     <div className="headingWords">
                         <span className="headingWord1">Blockchain </span>
                         <span className="headingWord2">for </span>
-                        <span className="headingWord3">earth. </span>
+                        <span className="headingWord3">Earth </span>
                     </div>
                     <div className="subHeading">
                         Join us on Our Green Journey

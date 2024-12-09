@@ -3,11 +3,60 @@ import {
   RouterProvider
 } from "react-router-dom";
 import './App.css';
+import { useEffect, useState } from "react";
 import CreateProjectPage from "./components/CreateProjectPage.jsx";
 import DonationPage from './components/DonationPage.jsx';
 import Homepage from "./components/Homepage.jsx";
 import UploadImageProof from "./components/UploadImageProof.jsx";
+import fetchDataFromCID from "./utilities/fetchDataFromCID.js";
+import getAllProjectAddresses from "./utilities/getAllProjects.js";
+import getCIDAndEndDateFromAddress from "./utilities/getCIDFromAddress.js";
+import Web3 from "./utilities/web3.js";
+
 function App() {
+  const [projects, setProjects] = useState([]); // Store project data with images
+  const [loading, setLoading] = useState(true); // Loading state
+
+  useEffect(() => {
+    async function fetchProjects() {
+        try {
+            // Step 1: Fetch project data
+            console.log("Calling getAllProjectAddresses...");
+            const projectAddresses = await getAllProjectAddresses();
+            console.log("project addresses at app.js", projectAddresses);
+       
+            // Step 2: Fetch images for each project
+            const projectsDetails = await Promise.allSettled(
+                projectAddresses.map(async (address) => {
+                    const { endDateObject, projectCID , projectTotalDonation, projectOwner} =
+                        await getCIDAndEndDateFromAddress(address);
+                    const projectTotalDonationInEther = Web3.utils.fromWei(projectTotalDonation, 'ether');  
+                    console.log("from getCIDandEndDate",endDateObject, projectCID, projectTotalDonationInEther, projectOwner);
+                    console.log(`Address: ${address}, CID and EndDate:`, { endDateObject, projectCID, projectTotalDonationInEther });
+                    const { imageUrl, jsonData } = await fetchDataFromCID(
+                        projectCID
+                    );
+                    const mergedJson = { ...jsonData, endDateObject, projectAddress: address, totalDonation: projectTotalDonationInEther, projectOwner: projectOwner };
+                    console.log(`mergedJson:${JSON.stringify(mergedJson)}`);
+                    return { image: imageUrl ,mergedJson };
+                })
+            );
+
+            const successfulProjects = projectsDetails
+                .filter((result) => result.status === "fulfilled")
+                .map((result) => result.value);
+            // console.log("projectsDetails array:", projectsDetails);
+            // console.log("successfulProjects array:", successfulProjects);
+            setProjects(successfulProjects);
+        } catch (error) {
+            console.error("Error fetching projects:", error);
+        } finally {
+            setLoading(false); // End loading state
+        }
+    }
+
+      fetchProjects();
+  }, []);
 
   //insert api call to backend
   const projectData = {
@@ -18,7 +67,7 @@ function App() {
   const projDataLength = JSON.stringify(projectData["projectTitleArr"].length)
 
   const router = createBrowserRouter([
-    { path: "/", element: <Homepage /> },
+    { path: "/", element: <Homepage projects={projects} loading={loading}/> },
     { path: "/donation/:projectTitle", element: <DonationPage /> },
     { path: "/project", element: <DonationPage /> },
     { path: "/createProject", element: <CreateProjectPage projDataLength={projDataLength}/> },

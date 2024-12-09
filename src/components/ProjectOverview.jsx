@@ -2,8 +2,11 @@
 import "../styles/ProjectOverview.css";
 import { Link, useNavigate } from "react-router-dom";
 export default function ProjectOverview(props) {
-    const { projectDate, projectAddress, projectTitle, projectDescription, projectBackgroundInfo, projectOwner, isOwner } = props;
+    const { projectDate, projectAddress, projectTitle, projectDescription, projectBackgroundInfo, projectOwner, isOwner, totalDonation } = props;
     const navigate = useNavigate();
+    console.log("Project address in ProjectOverview:", projectAddress);
+
+    console.log("Navigating with totalDonation in project overview:", totalDonation);
     console.log(props);
 
     const handleDonateClick = () => {
@@ -14,10 +17,10 @@ export default function ProjectOverview(props) {
                 projectOwner: projectOwner,
                 projectBackgroundInfo: projectBackgroundInfo,
                 isOwner: isOwner,
+                totalDonation: totalDonation,
             },
         });
     }
-
 
     // console.log("ProjectDescription:", projectDescription);
     return (
@@ -25,8 +28,9 @@ export default function ProjectOverview(props) {
             {/* <img src={oceanCleanup} className="projectImage" /> */}
             <div className="projectOverview">
                 <div className="projectOverviewText">
-                    <div className="projectDate">{projectDate}</div>
+                   
                     <div className="projectTitle">{projectTitle}</div>
+                    <div className="projectDate">{projectDate}</div>
                     <div className="projectDescription">
                         {projectDescription}
                     </div>
