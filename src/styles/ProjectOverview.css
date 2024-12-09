@@ -37,6 +37,11 @@
 .projectDescription {
     font-size: 1rem;
     color: #7b7d8c;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .donateButton {
     border: 1px solid #13adb7;
