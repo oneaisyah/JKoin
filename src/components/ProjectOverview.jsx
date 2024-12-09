@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 export default function ProjectOverview(props) {
     const { projectDate, projectAddress, projectTitle, projectDescription, projectBackgroundInfo, projectOwner, isOwner } = props;
     const navigate = useNavigate();
+    console.log(props);
 
     const handleDonateClick = () => {
         navigate(`/donation/${projectTitle}`, {

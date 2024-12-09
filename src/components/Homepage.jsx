@@ -19,13 +19,13 @@ export default function Homepage() {
             try {
                 // Step 1: Fetch project data
                 const projectAddresses = await getAllProjectAddresses();
-                console.log(projectAddresses);
+                console.log("projectAddresses", projectAddresses);
                 //remove
                 const projIndex = "metrology.jpg";
                 // Step 2: Fetch images for each project
                 const projectsDetails = await Promise.allSettled(
                     projectAddresses.map(async (address) => {
-                        const { endDateObject, projectCID } =
+                        const { endDateObject, projectCID, projectOwner } =
                             await getCIDAndEndDateFromAddress(address);
                         console.log(endDateObject, projectCID);
                         const { imageUrl, jsonData } = await fetchDataFromCID(
@@ -33,7 +33,7 @@ export default function Homepage() {
                         );
                         const mergedJson = { ...jsonData, endDateObject };
                         console.log(`mergedJson:${JSON.stringify(mergedJson)}`);
-                        return { image: imageUrl, mergedJson };
+                        return { image: imageUrl, mergedJson, projectOwner };
                     })
                 );
                 const successfulProjects = projectsDetails
@@ -63,7 +63,7 @@ export default function Homepage() {
                 projectDescription={project.mergedJson.projectDetails} // Map to project details
                 projectBackgroundInfo={project.mergedJson.backgroundInfo} // Map to background info
                 projectImage={project.image} // Use the image URL
-                projectOwner={"Unknown Owner"} // Replace with a meaningful value if available
+                projectOwner={project.projectOwner} // Replace with a meaningful value if available
                 isOwner={false} // Default or calculated value
             />
         ));
