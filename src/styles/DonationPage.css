@@ -1,5 +1,7 @@
 .donationPageWrapper {
-    background-color: #e2e2e2;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
     color: black;
     font-family: "DM Sans", sans-serif;
     width: 100%;
@@ -15,9 +17,10 @@
 .uploadButton {
     border: 1px solid #13adb7;
     color: #13adb7;
+    background-color: #ffffff;
     padding: 1rem;
     border-radius: 5px;
-    font-size: 1.5rem;
+    font-size: 1rem;
     text-decoration: none;
     text-align: center;
 }
@@ -32,8 +35,9 @@
 }
 .title {
     font-weight: bold;
-    font-size: 3rem;
-    padding: 30px 30px;
+    font-size: 2.5rem;
+    padding: 0px 210px 0px 210px;
+    text-align: left;
 }
 .middleSectionWrapper {
     width: 100%;
@@ -50,7 +54,7 @@
     justify-content: space-between;
 }
 .projImage {
-    width: 50%;
+    width: 60%;
 }
 
 .donationSection {
@@ -59,7 +63,8 @@
     height: auto;
     justify-content: space-around;
     align-items: center;
-    width: 40%;
+    width: full;
+    padding-left: 24px;
 }
 .donationBox {
     display: flex;
@@ -71,10 +76,45 @@
     margin: 3rem 0rem;
 }
 
+.donationContainer {
+    justify-content: left;
+
+}
+
+.donationAmount {
+    justify-content: left;
+    text-align: left;
+    font-size: 4rem;
+    color: #13adb7;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.donateButton {
+    border: 1px solid #13adb7;
+    color: #13adb7;
+    background-color: #ffffff;
+    font-size: 1.25rem !important;
+    padding: 12px 16px 12px 16px !important;
+    text-decoration: none;
+    text-align: center;
+}
+
+.amountRaised {
+    text-align: left;
+}
+
 .donationInput {
-    width: 100%;
-    height: 100%;
-    font-size: 1.5rem;
+    width: 200px;
+    /* height: 90%; */
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 1.25rem;
+    /* margin: 1rem 0; */
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
 .projectText {
@@ -103,5 +143,10 @@
 .projectHeading {
     font-weight: bold;
     padding: 5px 0px;
-    font-size: 2rem;
+    font-size: 1.75rem;
+}
+
+.backgroundSubheading,
+.projectSubheading {
+    font-size: 1.25rem;
 }
