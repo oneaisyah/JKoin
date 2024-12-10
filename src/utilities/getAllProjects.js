@@ -1,5 +1,4 @@
 import pLimit from 'p-limit';
-// import { web3 } from './web3.js';
 import Web3 from 'web3';
 const limit = pLimit(2);
 
@@ -382,21 +381,6 @@ async function fetchWithRetry(fn, retries = 5, delay = 2000) {
         throw err; // Throw other errors
     }
 }
-
-// // check if user is owner of the project
-// export async function checkOwner(projectAddress) {
-//     const getCurrentAccount = async () => {
-//         const accounts = await web3.eth.getAccounts();
-//         return accounts[0];
-//     };
-
-//     const currentAccount = await getCurrentAccount();
-//     console.log("Current Account:", currentAccount);
-//     const project = new web3.eth.Contract(projectABI, projectAddress);
-//     const owner = await project.methods.owner().call();
-
-//     return owner === currentAccount;
-// }
 
 let cachedProjects = null; // Cache to store project data
 
