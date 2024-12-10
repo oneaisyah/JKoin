@@ -15,7 +15,6 @@ export default function DonationPage() {
         projectOwner,
         projectImage,
         projectBackgroundInfo,
-        isOwner,
         totalDonation,
         goalAmount,
     } = location.state || {};
@@ -28,22 +27,19 @@ export default function DonationPage() {
     const navigate = useNavigate();
 
     const handleUploadProofClick = () => {
-<<<<<<< HEAD
+        const isOwner = checkOwner();
         console.log("Upload proof clicked");
         navigate(`/uploadProof/${projectAddress}`, {
-            state: { isOwner: isOwner },
+            state: { isOwner: isOwner, projectAddress: projectAddress },
         });
     };
-=======
-        const isOwner = checkOwner();
-        console.log("Upload proof clicked", projectAddress);
-        navigate(`/uploadProof/${projectTitle}`, { state: { isOwner: isOwner, projectAddress: projectAddress } });
-    }
 
     const checkOwner = () => {
         const currentAccount = window.ethereum.selectedAddress;
         const getCurrentAccount = async () => {
-            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+            const accounts = await window.ethereum.request({
+                method: "eth_requestAccounts",
+            });
             console.log("Accounts:", accounts);
             return accounts[0];
         };
@@ -52,8 +48,7 @@ export default function DonationPage() {
         console.log("Project Owner:", projectOwner);
 
         return currentAccount.toLowerCase() === projectOwner.toLowerCase();
-    }
->>>>>>> 52cec2d6c77ca0fc54d53bf4c8c20adee3c78b70
+    };
 
     const handleDonateClick = async () => {
         console.log("ProjectAddress in handleDonateClick:", projectAddress);
@@ -151,18 +146,6 @@ export default function DonationPage() {
                             </div>
                         </div>
                     </div>
-<<<<<<< HEAD
-                    <div>
-                        {/* {checkOwner() && (
-                                <Link to={`/uploadProof/${projectTitle}`}>
-                                    <button className="donateButton" onClick={handleUploadProofClick}>
-                                        Upload Proof
-                                    </button>
-                                </Link>
-                            )} */}
-                    </div>
-=======
->>>>>>> 52cec2d6c77ca0fc54d53bf4c8c20adee3c78b70
                 </div>
             </div>
             <div className="projectText">

@@ -16,15 +16,8 @@ export default function ProjectOverview(props) {
     } = props;
     const navigate = useNavigate();
 
-<<<<<<< HEAD
-    console.log(
-        "Navigating with totalDonation in project overview:",
-        totalDonation
-    );
-=======
     console.log("Navigating with totalDonation in project overview:", totalDonation);
     console.log(props);
->>>>>>> 52cec2d6c77ca0fc54d53bf4c8c20adee3c78b70
 
     const handleDonateClick = () => {
         navigate(`/donation/${projectAddress}`, {
