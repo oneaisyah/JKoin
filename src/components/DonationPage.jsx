@@ -16,10 +16,13 @@ export default function DonationPage() {
         projectOwner,
         projectImage,
         projectBackgroundInfo,
+        isOwner,
         totalDonation,
         goalAmount,
     } = location.state || {};
+    console.log("isOwner in donation page:", isOwner);
     const [isConnecting, setIsConnecting] = useState(false);
+    const [isDonating, setIsDonating] = useState(false);
     const [donationAmount, setDonationAmount] = useState(0);
     const [loading, setLoading] = useState(true);
     const progress = Math.min((totalDonation / goalAmount) * 100, 100);
@@ -28,31 +31,12 @@ export default function DonationPage() {
     const navigate = useNavigate();
 
     const handleUploadProofClick = () => {
-        const isOwner = checkOwner();
-        // console.log("Upload proof clicked");
         navigate(`/uploadProof/${projectAddress}`, {
             state: { isOwner: isOwner, projectAddress: projectAddress },
         });
     };
 
-    const checkOwner = () => {
-        const currentAccount = window.ethereum.selectedAddress;
-        const getCurrentAccount = async () => {
-            const accounts = await window.ethereum.request({
-                method: "eth_requestAccounts",
-            });
-            console.log("Accounts:", accounts);
-            return accounts[0];
-        };
-
-        // console.log("Current Account:", currentAccount);
-        // console.log("Project Owner:", projectOwner);
-
-        return currentAccount.toLowerCase() === projectOwner.toLowerCase();
-    };
-
-    const handleDonateClick = async () => {
-        // console.log("ProjectAddress in handleDonateClick:", projectAddress);
+    const initializeWeb3AndContract = async () => {
         if (!window.ethereum) {
             alert("Please install MetaMask to donate.");
             return;
@@ -72,24 +56,39 @@ export default function DonationPage() {
                 method: "eth_requestAccounts",
             });
             const account = accounts[0];
-            // console.log("Account:", account);
-            // console.log("projectAddress from donation page:", projectAddress);
 
             const web3 = new Web3(window.ethereum);
             const project = new web3.eth.Contract(projectABI, projectAddress);
 
+            return { web3, project, account };
+        } catch (error) {
+            console.error("Error connecting wallet:", error);
+            alert("Failed to connect wallet. Please try again.");
+        }
+        setIsConnecting(false);
+    };
+
+    const handleDonateClick = async () => {
+        const { web3, project, account } = await initializeWeb3AndContract();
+        setIsDonating(true);
+
+        if (!web3 || !project || !account) {
+            return;
+        }
+
+        try {
             const transaction = await project.methods.fund().send({
                 from: account,
                 value: web3.utils.toWei(donationAmount, "ether"),
             });
 
-            // console.log("Transaction:", transaction);
+            console.log("Transaction:", transaction);
             alert("Donation successful!");
         } catch (error) {
             console.error("Error donating:", error);
             alert("Error donating. Please try again.");
         }
-        setIsConnecting(false);
+        setIsDonating(false);
     };
 
     return (
@@ -103,71 +102,87 @@ export default function DonationPage() {
             <div className="middleSectionWrapper">
                 <div className="middleSection">
                     <img className="projImage" src={projectImage} alt="" />
-                    <div className="donationSection">
-                        <div className="donationBox">
-                            <div className="donationText">Donate amount:</div>
-                            <input
-                                className="donationInput"
-                                placeholder="Amount (Ether)"
-                                onChange={(e) =>
-                                    setDonationAmount(e.target.value)
-                                }
-                                value={donationAmount || ""}
-                                type="number"
-                            />
-                            <button
-                                className="donateButton"
-                                onClick={handleDonateClick}
-                            >
-                                Donate
-                            </button>
-                        </div>
-                        <div className="donationContainer">
-                            {/* <div className="donationAmount">
-                                $500
-                            </div> */}
-                            <div className="donationBar">
-                                <div
-                                    className="donationBarFill"
-                                    style={{ width: `${progress}%` }}
-                                ></div>
+                    {isOwner ? (
+                        <div className="donationSection">
+                            <div className="donationBox">
+                                <div className="donationText">
+                                    You are the owner of this project.
+                                </div>
                             </div>
-                            <div className="donationAmount">
-                                {totalDonation}/{goalAmount} Ether
+                            <div className="donationContainer">
+                                <div className="donationBar">
+                                    <div
+                                        className="donationBarFill"
+                                        style={{ width: `${progress}%` }}
+                                    ></div>
+                                </div>
+                                <div className="donationAmount">
+                                    {totalDonation}/{goalAmount} Ether
+                                </div>
+                                <div className="amountRaised">
+                                    raised so far!
+                                </div>
                             </div>
-                            <div className="amountRaised">
-                                raised so far! It's your turn to make a
-                                difference!
+                            <div className="buttonOptions">
+                                <button
+                                    className="uploadButton"
+                                    onClick={handleUploadProofClick}
+                                >
+                                    Upload Proof
+                                </button>
+                                <button
+                                    className="withdrawButton"
+                                    onClick={withdrawFunds}
+                                >
+                                    Withdraw
+                                </button>
                             </div>
                         </div>
-                        <div className="orgOptions">
-                            <div className="organization">
-                                Organization Options:
+                    ) : (
+                        <div className="donationSection">
+                            <div className="donationBox">
+                                <div className="donationText">Donate amount:</div>
+                                <input
+                                    className="donationInput"
+                                    placeholder="Amount (Ether)"
+                                    onChange={(e) =>
+                                        setDonationAmount(e.target.value)
+                                    }
+                                    value={donationAmount || ""}
+                                    type="number"
+                                />
+                                <button
+                                    className="donateButton"
+                                    onClick={handleDonateClick}
+                                >
+                                    {isDonating ? "Donating..." : "Donate"}
+                                </button>
                             </div>
-                            <button
-                                className="uploadButton"
-                                onClick={handleUploadProofClick}
-                            >
-                                Upload Proof
-                            </button>
-
-                            <button
-                                className="withdrawButton"
-                                onClick={withdrawFunds}
-                            >
-                                Withdraw
-                            </button>
+                            <div className="donationContainer">
+                                <div className="donationBar">
+                                    <div
+                                        className="donationBarFill"
+                                        style={{ width: `${progress}%` }}
+                                    ></div>
+                                </div>
+                                <div className="donationAmount">
+                                    {totalDonation}/{goalAmount} Ether
+                                </div>
+                                <div className="amountRaised">
+                                    raised so far! It's your turn to make a
+                                    difference!
+                                </div>
+                            </div>
+                            <div className="buttonOptions">
+                                <button
+                                    className="refundButton"
+                                    onClick={requestRefund}
+                                >
+                                    Request Refund
+                                </button>
+                            </div>
                         </div>
-                        <div className="donorOptions">
-                            <div className="donor">Donor options:</div>
-                            <button
-                                className="refundButton"
-                                onClick={requestRefund}
-                            >
-                                Request Refund
-                            </button>
-                        </div>
-                    </div>
+                    )}
                 </div>
             </div>
             <div className="projectText">
