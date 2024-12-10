@@ -28,15 +28,15 @@ function App() {
             // Step 2: Fetch images for each project
             const projectsDetails = await Promise.allSettled(
                 projectAddresses.map(async (address) => {
-                    const { endDateObject, projectCID , projectTotalDonation} =
+                    const { endDateObject, projectCID , projectTotalDonation, projectOwner} =
                         await getCIDAndEndDateFromAddress(address);
                     const projectTotalDonationInEther = Web3.utils.fromWei(projectTotalDonation, 'ether');  
-                    console.log("from getCIDandEndDate",endDateObject, projectCID, projectTotalDonationInEther);
+                    console.log("from getCIDandEndDate",endDateObject, projectCID, projectTotalDonationInEther, projectOwner);
                     console.log(`Address: ${address}, CID and EndDate:`, { endDateObject, projectCID, projectTotalDonationInEther });
                     const { imageUrl, jsonData } = await fetchDataFromCID(
                         projectCID
                     );
-                    const mergedJson = { ...jsonData, endDateObject, projectAddress: address, totalDonation: projectTotalDonationInEther};
+                    const mergedJson = { ...jsonData, endDateObject, projectAddress: address, totalDonation: projectTotalDonationInEther, projectOwner: projectOwner };
                     console.log(`mergedJson:${JSON.stringify(mergedJson)}`);
                     return { image: imageUrl ,mergedJson };
                 })
