@@ -10,7 +10,6 @@ export default function ProjectOverview(props) {
         projectBackgroundInfo,
         projectImage,
         projectOwner,
-        isOwner,
         totalDonation,
         goalAmount,
     } = props;
@@ -20,6 +19,8 @@ export default function ProjectOverview(props) {
     console.log(props);
 
     const handleDonateClick = () => {
+        const isOwner = checkOwner();
+        console.log("isOwner in project overview:", isOwner);
         navigate(`/donation/${projectAddress}`, {
             state: {
                 projectAddress: projectAddress,
@@ -33,6 +34,14 @@ export default function ProjectOverview(props) {
                 projectImage: projectImage,
             },
         });
+    };
+
+    const checkOwner = () => {
+        const currentAccount = window.ethereum.selectedAddress;
+        console.log("Current Account:", currentAccount);
+        console.log("Project Owner:", projectOwner);
+
+        return currentAccount.toLowerCase() === projectOwner.toLowerCase();
     };
 
     // console.log("ProjectDescription:", projectDescription);
