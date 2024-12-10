@@ -1,22 +1,28 @@
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
-import beachImage from "../assets/images/beachCleanup.jpeg";
-import trashFreeImage from "../assets/images/trash_free.jpeg";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Web3 from "web3";
+import projectABI from "../abi/ProjectABI.json";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/DonationPage.css";
-import Web3 from "web3";
-import { useState } from "react";
-import projectABI from "../abi/ProjectABI.json";
 
 export default function DonationPage() {
-    const { projectTitle } = useParams();
     const location = useLocation();
     console.log("Location state in donation page:", location.state);
-    const { projectAddress, projectDescription, projectOwner, projectBackgroundInfo, isOwner, totalDonation} = location.state || {};
+    const {
+        projectAddress,
+        projectDescription,
+        projectTitle,
+        projectOwner,
+        projectImage,
+        projectBackgroundInfo,
+        isOwner,
+        totalDonation,
+        goalAmount,
+    } = location.state || {};
     const [isConnecting, setIsConnecting] = useState(false);
     const [donationAmount, setDonationAmount] = useState(0);
-    // const [totalDonation, setTotalDonation] = useState(0);
     const [loading, setLoading] = useState(true);
+    const progress = Math.min((totalDonation / goalAmount) * 100, 100);
 
     console.log("total donation in donation page", totalDonation);
 
@@ -24,8 +30,10 @@ export default function DonationPage() {
 
     const handleUploadProofClick = () => {
         console.log("Upload proof clicked");
-        navigate(`/uploadProof/${projectTitle}`, { state: { isOwner: isOwner } });
-    }
+        navigate(`/uploadProof/${projectAddress}`, {
+            state: { isOwner: isOwner },
+        });
+    };
 
     const handleDonateClick = async () => {
         console.log("ProjectAddress in handleDonateClick:", projectAddress);
@@ -35,14 +43,18 @@ export default function DonationPage() {
         }
 
         if (isConnecting) {
-            alert("Please wait for the connection to complete. Check MetaMask.");
+            alert(
+                "Please wait for the connection to complete. Check MetaMask."
+            );
             return;
         }
 
         setIsConnecting(true);
 
         try {
-            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+            const accounts = await window.ethereum.request({
+                method: "eth_requestAccounts",
+            });
             const account = accounts[0];
             console.log("Account:", account);
             console.log("projectAddress from donation page:", projectAddress);
@@ -62,7 +74,7 @@ export default function DonationPage() {
             alert("Error donating. Please try again.");
         }
         setIsConnecting(false);
-    }
+    };
 
     return (
         <div className="donationPageWrapper">
@@ -70,34 +82,52 @@ export default function DonationPage() {
                 <Link className="toHome" to="/">
                     <Logo className="logo2" />
                 </Link>
-                <button className="uploadButton" onClick={handleUploadProofClick}>
+                <button
+                    className="uploadButton"
+                    onClick={handleUploadProofClick}
+                >
                     Upload Proof
                 </button>
             </div>
             <div className="title">Donation for Project: {projectTitle}</div>
             <div className="middleSectionWrapper">
                 <div className="middleSection">
-                    <img className="projImage" src={trashFreeImage} alt="" />
+                    <img className="projImage" src={projectImage} alt="" />
                     <div className="donationSection">
                         <div className="donationBox">
+                            <div className="donationText">Donate amount:</div>
                             <input
                                 className="donationInput"
                                 placeholder="Amount (Ether)"
-                                onChange={(e) => setDonationAmount(e.target.value)}
-                                value={donationAmount}
+                                onChange={(e) =>
+                                    setDonationAmount(e.target.value)
+                                }
+                                value={donationAmount || ""}
                                 type="number"
                             />
-                            <button className="donateButton" onClick={handleDonateClick}>Donate</button>
+                            <button
+                                className="donateButton"
+                                onClick={handleDonateClick}
+                            >
+                                Donate
+                            </button>
                         </div>
                         <div className="donationContainer">
                             {/* <div className="donationAmount">
                                 $500
                             </div> */}
+                            <div className="donationBar">
+                                <div
+                                    className="donationBarFill"
+                                    style={{ width: `${progress}%` }}
+                                ></div>
+                            </div>
                             <div className="donationAmount">
-                                {totalDonation} Ether
+                                {totalDonation}/{goalAmount} Ether
                             </div>
                             <div className="amountRaised">
-                                raised so far! It's your turn to make a difference!
+                                raised so far! It's your turn to make a
+                                difference!
                             </div>
                         </div>
                     </div>
@@ -109,7 +139,6 @@ export default function DonationPage() {
                                     </button>
                                 </Link>
                             )} */}
-
                     </div>
                 </div>
             </div>
@@ -123,7 +152,9 @@ export default function DonationPage() {
                     </div>
                 </div>
                 <div className="projectInfo">
-                    <div className="projectHeading">Full Project Description</div>
+                    <div className="projectHeading">
+                        Full Project Description
+                    </div>
                     <div className="projectSubheading">
                         {projectBackgroundInfo}
                     </div>

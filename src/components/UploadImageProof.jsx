@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/UploadImageProof.css";
 import { uploadFiles } from "../utilities/uploadFiles.js";
 
 export default function UploadImageProof() {
-    const { projectTitle } = useParams();
     const location = useLocation();
     const { isOwner } = location.state || false;
     // const [isOwner, setIsOwner] = useState(false);
     const [file, setFile] = useState(null);
-
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
@@ -53,7 +51,10 @@ export default function UploadImageProof() {
             ) : (
                 <div>
                     <h1>Unauthorized Access</h1>
-                    <p>You are not authorized to upload image proof for this project.</p>
+                    <p>
+                        You are not authorized to upload image proof for this
+                        project.
+                    </p>
                 </div>
             )}
         </div>
