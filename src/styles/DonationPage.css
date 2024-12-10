@@ -123,16 +123,16 @@
     border: 1px solid #ddd;
     border-radius: 5px;
 }
-.orgOptions {
+.buttonOptions {
     font-size: 1rem;
     display: flex;
     flex-direction: row;
+    justify-content: flex-end;
     padding: 1%;
-    justify-content: space-between;
-    align-items: center;
+    gap: 1rem;
     width: 100%;
 }
-.donorOptions {
+/* .donorOptions {
     font-size: 1rem;
     display: flex;
     flex-direction: row;
@@ -140,7 +140,7 @@
     justify-content: space-around;
     align-items: center;
     width: 100%;
-}
+} */
 .uploadButton {
     border: 1px solid #13adb7;
     color: #13adb7;
