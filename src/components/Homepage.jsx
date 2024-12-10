@@ -20,7 +20,7 @@ export default function Homepage({projects, loading}) {
                 projectDescription={project.mergedJson.projectDetails} // Map to project details
                 projectBackgroundInfo={project.mergedJson.backgroundInfo} // Map to background info
                 projectImage={project.image} // Use the image URL
-                projectOwner={project.projectOwner} // Replace with a meaningful value if available
+                projectOwner={project.mergedJson.projectOwner} // Replace with a meaningful value if available
                 isOwner={false} // Default or calculated value
                 totalDonation={project.mergedJson.totalDonation}
             />
