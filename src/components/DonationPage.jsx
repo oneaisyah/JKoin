@@ -4,10 +4,11 @@ import Web3 from "web3";
 import projectABI from "../abi/ProjectABI.json";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/DonationPage.css";
+import { requestRefund, withdrawFunds } from "../utilities/web3functions";
 
 export default function DonationPage() {
     const location = useLocation();
-    console.log("Location state in donation page:", location.state);
+    // console.log("Location state in donation page:", location.state);
     const {
         projectAddress,
         projectDescription,
@@ -23,12 +24,12 @@ export default function DonationPage() {
     const [loading, setLoading] = useState(true);
     const progress = Math.min((totalDonation / goalAmount) * 100, 100);
 
-    console.log("total donation in donation page", totalDonation);
+    // console.log("total donation in donation page", totalDonation);
     const navigate = useNavigate();
 
     const handleUploadProofClick = () => {
         const isOwner = checkOwner();
-        console.log("Upload proof clicked");
+        // console.log("Upload proof clicked");
         navigate(`/uploadProof/${projectAddress}`, {
             state: { isOwner: isOwner, projectAddress: projectAddress },
         });
@@ -44,14 +45,14 @@ export default function DonationPage() {
             return accounts[0];
         };
 
-        console.log("Current Account:", currentAccount);
-        console.log("Project Owner:", projectOwner);
+        // console.log("Current Account:", currentAccount);
+        // console.log("Project Owner:", projectOwner);
 
         return currentAccount.toLowerCase() === projectOwner.toLowerCase();
     };
 
     const handleDonateClick = async () => {
-        console.log("ProjectAddress in handleDonateClick:", projectAddress);
+        // console.log("ProjectAddress in handleDonateClick:", projectAddress);
         if (!window.ethereum) {
             alert("Please install MetaMask to donate.");
             return;
@@ -71,8 +72,8 @@ export default function DonationPage() {
                 method: "eth_requestAccounts",
             });
             const account = accounts[0];
-            console.log("Account:", account);
-            console.log("projectAddress from donation page:", projectAddress);
+            // console.log("Account:", account);
+            // console.log("projectAddress from donation page:", projectAddress);
 
             const web3 = new Web3(window.ethereum);
             const project = new web3.eth.Contract(projectABI, projectAddress);
@@ -82,7 +83,7 @@ export default function DonationPage() {
                 value: web3.utils.toWei(donationAmount, "ether"),
             });
 
-            console.log("Transaction:", transaction);
+            // console.log("Transaction:", transaction);
             alert("Donation successful!");
         } catch (error) {
             console.error("Error donating:", error);
@@ -97,12 +98,6 @@ export default function DonationPage() {
                 <Link className="toHome" to="/">
                     <Logo className="logo2" />
                 </Link>
-                <button
-                    className="uploadButton"
-                    onClick={handleUploadProofClick}
-                >
-                    Upload Proof
-                </button>
             </div>
             <div className="title">Donation for Project: {projectTitle}</div>
             <div className="middleSectionWrapper">
@@ -145,6 +140,33 @@ export default function DonationPage() {
                                 difference!
                             </div>
                         </div>
+                        <div className="orgOptions">
+                            <div className="organization">
+                                Organization Options:
+                            </div>
+                            <button
+                                className="uploadButton"
+                                onClick={handleUploadProofClick}
+                            >
+                                Upload Proof
+                            </button>
+
+                            <button
+                                className="withdrawButton"
+                                onClick={withdrawFunds}
+                            >
+                                Withdraw
+                            </button>
+                        </div>
+                        <div className="donorOptions">
+                            <div className="donor">Donor options:</div>
+                            <button
+                                className="refundButton"
+                                onClick={requestRefund}
+                            >
+                                Request Refund
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -154,7 +176,7 @@ export default function DonationPage() {
                         Background of the Sustainability Organization
                     </div>
                     <div className="backgroundSubheading">
-                        Organization Name: {projectOwner}
+                        {projectBackgroundInfo}
                     </div>
                 </div>
                 <div className="projectInfo">
@@ -162,7 +184,7 @@ export default function DonationPage() {
                         Full Project Description
                     </div>
                     <div className="projectSubheading">
-                        {projectBackgroundInfo}
+                        {projectDescription}
                     </div>
                 </div>
             </div>

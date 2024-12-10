@@ -9,7 +9,7 @@ export default function Homepage({ projects, loading }) {
     //     "bafybeiecljye4dvylbmjd33bhqnrdb2xsejcy2oqdkufszselaqjjjis2a";
 
     function generateProjectsList() {
-        console.log(projects);
+        // console.log(projects);
         return projects.map((project, index) => (
             <ProjectOverview
                 key={index}
