@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/UploadImageProof.css";
 import { uploadFiles } from "../utilities/uploadFiles.js";
@@ -7,7 +7,6 @@ import Web3 from "web3";
 import projectABI from "../abi/ProjectABI.json";
 
 export default function UploadImageProof() {
-    const { projectTitle } = useParams();
     const location = useLocation();
     const { isOwner, projectAddress } = location.state || false;
     const [proofPhotoCID, setProofPhotoCID] = useState("");
@@ -101,7 +100,10 @@ export default function UploadImageProof() {
             ) : (
                 <div>
                     <h1>Unauthorized Access</h1>
-                    <p>You are not authorized to upload image proof for this project.</p>
+                    <p>
+                        You are not authorized to upload image proof for this
+                        project.
+                    </p>
                 </div>
             )}
         </div>

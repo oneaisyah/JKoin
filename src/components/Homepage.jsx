@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import forestImg from "../assets/images/treeBg.jpeg";
 import "../styles/Homepage.css";
 import ProjectOverview from "./ProjectOverview";
 
-export default function Homepage({projects, loading}) {
+export default function Homepage({ projects, loading }) {
     // const hardCodedCid =
     //     "bafybeiecljye4dvylbmjd33bhqnrdb2xsejcy2oqdkufszselaqjjjis2a";
 
@@ -23,6 +22,7 @@ export default function Homepage({projects, loading}) {
                 projectOwner={project.mergedJson.projectOwner} // Replace with a meaningful value if available
                 isOwner={false} // Default or calculated value
                 totalDonation={project.mergedJson.totalDonation}
+                goalAmount={project.mergedJson.goalAmount}
             />
         ));
     }
