@@ -20,10 +20,8 @@ function App() {
   useEffect(() => {
     async function fetchProjects() {
         try {
-            // Step 1: Fetch project data
-            console.log("Calling getAllProjectAddresses...");
             const projectAddresses = await getAllProjectAddresses();
-            console.log("project addresses at app.js", projectAddresses);
+            
        
             // Step 2: Fetch images for each project
             const projectsDetails = await Promise.allSettled(
