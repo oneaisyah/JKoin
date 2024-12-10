@@ -38,3 +38,7 @@
     cursor: pointer;
     font-size: 2rem;
 }
+
+.after-upload {
+    color: #13adb7;
+}

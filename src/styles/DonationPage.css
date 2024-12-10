@@ -1,5 +1,7 @@
 .donationPageWrapper {
-    background-color: #e2e2e2;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
     color: black;
     font-family: "DM Sans", sans-serif;
     width: 100%;
@@ -12,16 +14,6 @@
     justify-content: space-between;
 }
 
-.uploadButton {
-    border: 1px solid #13adb7;
-    color: #13adb7;
-    padding: 1rem;
-    border-radius: 5px;
-    font-size: 1.5rem;
-    text-decoration: none;
-    text-align: center;
-}
-
 .toHome {
     width: 150px;
     height: auto;
@@ -32,8 +24,10 @@
 }
 .title {
     font-weight: bold;
-    font-size: 3rem;
-    padding: 30px 30px;
+    font-size: 2.5rem;
+    display: flex;
+    text-align: center;
+    justify-content: center;
 }
 .middleSectionWrapper {
     width: 100%;
@@ -50,16 +44,17 @@
     justify-content: space-between;
 }
 .projImage {
-    width: 50%;
+    width: 60%;
 }
 
 .donationSection {
     display: flex;
     flex-direction: column;
     height: auto;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    width: 40%;
+    width: full;
+    padding-left: 24px;
 }
 .donationBox {
     display: flex;
@@ -71,10 +66,126 @@
     margin: 3rem 0rem;
 }
 
-.donationInput {
-    width: 100%;
+.donationContainer {
+    justify-content: left;
+}
+
+.donationBar {
+    background-color: #e0e0e0; /* Light gray background */
+    border-radius: 25px; /* Rounded corners */
+    height: 25px;
+    position: relative;
+    width: 100%; /* Full width of the container */
+    overflow: hidden;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.donationBarFill {
+    background-color: #4caf50; /* Green color */
     height: 100%;
-    font-size: 1.5rem;
+    width: 0%; /* Start with 0% */
+    transition: width 0.5s ease-in-out; /* Smooth animation for progress */
+}
+
+.donationAmount {
+    justify-content: left;
+    text-align: left;
+    font-size: 4rem;
+    color: #13adb7;
+    font-weight: 700;
+    letter-spacing: 2px;
+    width: 100%;
+}
+
+.donateButton {
+    border: 1px solid #13adb7;
+    color: #13adb7;
+    background-color: #ffffff;
+    font-size: 1.25rem !important;
+    padding: 12px 16px 12px 16px !important;
+    text-decoration: none;
+    text-align: center;
+}
+
+.amountRaised {
+    text-align: left;
+}
+
+.donationInput {
+    width: 200px;
+    /* height: 90%; */
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 1.25rem;
+    /* margin: 1rem 0; */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.orgOptions {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: row;
+    padding: 1%;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.donorOptions {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: row;
+    padding: 1%;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+.uploadButton {
+    border: 1px solid #13adb7;
+    color: #13adb7;
+    background-color: #ffffff;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-decoration: none;
+    text-align: center;
+}
+.uploadButton:hover {
+    background-color: #13adb7;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.withdrawButton {
+    border: 1px solid #13adb7;
+    color: #13adb7;
+    background-color: #ffffff;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-decoration: none;
+    text-align: center;
+}
+.withdrawButton:hover {
+    background-color: #13adb7;
+    color: #ffffff;
+    cursor: pointer;
+}
+.refundButton {
+    border: 1px solid #13adb7;
+    color: #13adb7;
+    background-color: #ffffff;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-decoration: none;
+    text-align: center;
+}
+.refundButton:hover {
+    background-color: #13adb7;
+    color: #ffffff;
+    cursor: pointer;
 }
 
 .projectText {
@@ -103,5 +214,10 @@
 .projectHeading {
     font-weight: bold;
     padding: 5px 0px;
-    font-size: 2rem;
+    font-size: 1.75rem;
+}
+
+.backgroundSubheading,
+.projectSubheading {
+    font-size: 1.25rem;
 }

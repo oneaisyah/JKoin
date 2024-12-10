@@ -2,23 +2,28 @@
     background-color: #ffffff;
     width: 25%;
     text-align: left;
-    border-radius: 3px;
+    border-radius: 0px;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
+    border: 1px solid #e0e0e1;
+    padding: 12px 12px 12px 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
 }
 .projectOverview {
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Adjusts spacing between children vertically */
     height: 100%;
+
     gap: 1rem;
 }
 .projectOverviewText {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0rem;
     overflow: hidden;
 }
 .projectImage {
@@ -26,17 +31,26 @@
     height: auto;
 }
 .projectDate {
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: #999ca9;
+    margin-bottom: 8px;
 }
 .projectTitle {
-    font-size: 2rem;
-    color: #0f111d;
+    font-size: 1.75rem;
+    color: #000000;
     text-overflow: ellipsis;
+    text-transform: capitalize;
+    font-weight: 700;
+    margin-bottom: 2px;
 }
 .projectDescription {
     font-size: 1rem;
     color: #7b7d8c;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .donateButton {
     border: 1px solid #13adb7;
