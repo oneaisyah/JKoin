@@ -1,5 +1,7 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 import beachImage from "../assets/images/beachCleanup.jpeg";
+import trashFreeImage from "../assets/images/trash_free.jpeg";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/DonationPage.css";
 import Web3 from "web3";
@@ -9,10 +11,14 @@ import projectABI from "../abi/ProjectABI.json";
 export default function DonationPage() {
     const { projectTitle } = useParams();
     const location = useLocation();
-    const { projectAddress, projectDescription, projectOwner, projectBackgroundInfo, isOwner } = location.state || {};
+    console.log("Location state in donation page:", location.state);
+    const { projectAddress, projectDescription, projectOwner, projectBackgroundInfo, isOwner, totalDonation} = location.state || {};
     const [isConnecting, setIsConnecting] = useState(false);
     const [donationAmount, setDonationAmount] = useState(0);
+    // const [totalDonation, setTotalDonation] = useState(0);
     const [loading, setLoading] = useState(true);
+
+    console.log("total donation in donation page", totalDonation);
 
     const navigate = useNavigate();
 
@@ -22,6 +28,7 @@ export default function DonationPage() {
     }
 
     const handleDonateClick = async () => {
+        console.log("ProjectAddress in handleDonateClick:", projectAddress);
         if (!window.ethereum) {
             alert("Please install MetaMask to donate.");
             return;
@@ -38,7 +45,7 @@ export default function DonationPage() {
             const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
             const account = accounts[0];
             console.log("Account:", account);
-            console.log("projectAddress:", projectAddress);
+            console.log("projectAddress from donation page:", projectAddress);
 
             const web3 = new Web3(window.ethereum);
             const project = new web3.eth.Contract(projectABI, projectAddress);
@@ -70,20 +77,28 @@ export default function DonationPage() {
             <div className="title">Donation for Project: {projectTitle}</div>
             <div className="middleSectionWrapper">
                 <div className="middleSection">
-                    <img className="projImage" src={beachImage} alt="" />
+                    <img className="projImage" src={trashFreeImage} alt="" />
                     <div className="donationSection">
                         <div className="donationBox">
                             <input
                                 className="donationInput"
-                                placeholder="AMOUNT"
+                                placeholder="Amount (Ether)"
                                 onChange={(e) => setDonationAmount(e.target.value)}
                                 value={donationAmount}
                                 type="number"
                             />
                             <button className="donateButton" onClick={handleDonateClick}>Donate</button>
                         </div>
-                        <div className="amountRaised">
-                            $9850 raised so far! It's your turn to make a difference!
+                        <div className="donationContainer">
+                            {/* <div className="donationAmount">
+                                $500
+                            </div> */}
+                            <div className="donationAmount">
+                                {totalDonation} Ether
+                            </div>
+                            <div className="amountRaised">
+                                raised so far! It's your turn to make a difference!
+                            </div>
                         </div>
                     </div>
                     <div>
