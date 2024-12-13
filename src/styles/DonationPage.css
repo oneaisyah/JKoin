@@ -127,20 +127,12 @@
     font-size: 1rem;
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: center;
     padding: 1%;
     gap: 1rem;
     width: 100%;
+    padding-top: 10px;
 }
-/* .donorOptions {
-    font-size: 1rem;
-    display: flex;
-    flex-direction: row;
-    padding: 1%;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-} */
 .uploadButton {
     border: 1px solid #13adb7;
     color: #13adb7;

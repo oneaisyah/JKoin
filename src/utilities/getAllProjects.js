@@ -2,7 +2,6 @@ import pLimit from 'p-limit';
 import Web3 from 'web3';
 const limit = pLimit(2);
 
-// Replace with your deployed ProjectFactory contract's ABI and address
 const projectFactoryABI = [
     {
         "inputs": [
@@ -61,9 +60,6 @@ const projectFactoryABI = [
     }
 ]
 
-
-
-// Replace with your Project contract's ABI
 const projectABI = [
     {
         "inputs": [
@@ -386,14 +382,11 @@ let cachedProjects = null; // Cache to store project data
 
 export default async function getAllProjectAddresses() {
     if (cachedProjects) {
-        console.log("Returning cached projects...");
         return cachedProjects; // Return cached data
     }
 
     try {
-        console.log("Fetching deployed projects...");
         const projectAddresses = await projectFactory.methods.getDeployedProjects().call();
-        console.log("Project Addresses:", projectAddresses);
         return projectAddresses;
     } catch (error) {
         console.error("Error fetching projects:", error);

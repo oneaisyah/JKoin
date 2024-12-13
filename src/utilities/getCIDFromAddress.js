@@ -36,14 +36,12 @@ export default async function getCIDAndEndDateFromAddress(address) {
 
         // Call the `getProjectDetails` method
         const projectDetails = await contract.methods.getProjectDetails().call();
-        console.log("project details", projectDetails)
 
         // Extract the first input as project owner
         const projectOwner = projectDetails[0];
         // Extract the second output as the project CID
         const projectCID = projectDetails[1]; // Assuming the second output is the CID
 
-        console.log("Project CID:", projectCID);
         const projectTotalDonation = projectDetails[3];
         const endDate = projectDetails[4]
         const endDateMs = Number(endDate) * 1000;

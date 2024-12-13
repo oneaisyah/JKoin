@@ -1,4 +1,4 @@
-// import oceanCleanup from "../assets/images/oceanCleanup.jpeg";
+
 import { useNavigate } from "react-router-dom";
 import "../styles/ProjectOverview.css";
 export default function ProjectOverview(props) {
@@ -15,12 +15,9 @@ export default function ProjectOverview(props) {
     } = props;
     const navigate = useNavigate();
 
-    console.log("Navigating with totalDonation in project overview:", totalDonation);
-    console.log(props);
 
     const handleDonateClick = () => {
         const isOwner = checkOwner();
-        console.log("isOwner in project overview:", isOwner);
         navigate(`/donation/${projectAddress}`, {
             state: {
                 projectAddress: projectAddress,
@@ -38,16 +35,11 @@ export default function ProjectOverview(props) {
 
     const checkOwner = () => {
         const currentAccount = window.ethereum.selectedAddress;
-        console.log("Current Account:", currentAccount);
-        console.log("Project Owner:", projectOwner);
-
         return currentAccount.toLowerCase() === projectOwner.toLowerCase();
     };
 
-    // console.log("ProjectDescription:", projectDescription);
     return (
         <div className="ProjectOverviewWrapper">
-            {/* <img src={oceanCleanup} className="projectImage" /> */}
             <div className="projectOverview">
                 <div className="projectOverviewText">
                     <div className="projectTitle">{projectTitle}</div>

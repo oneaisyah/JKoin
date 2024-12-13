@@ -1,19 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Web3 from "web3";
 import projectABI from "../abi/ProjectABI.json";
 import { ReactComponent as Logo } from "../assets/images/JKoin.svg";
 import "../styles/DonationPage.css";
-import { requestRefund, withdrawFunds } from "../utilities/web3functions";
+import {
+    getProjectDetails,
+    requestRefund,
+    withdrawFunds,
+} from "../utilities/web3functions";
 
 export default function DonationPage() {
     const location = useLocation();
-    // console.log("Location state in donation page:", location.state);
     const {
         projectAddress,
         projectDescription,
         projectTitle,
-        projectOwner,
         projectImage,
         projectBackgroundInfo,
         isOwner,
@@ -25,10 +27,34 @@ export default function DonationPage() {
     const [isDonating, setIsDonating] = useState(false);
     const [donationAmount, setDonationAmount] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [projectDetails, setProjectDetails] = useState(null);
+    const [proofImage, setProofImage] = useState(null);
+
     const progress = Math.min((totalDonation / goalAmount) * 100, 100);
 
-    // console.log("total donation in donation page", totalDonation);
     const navigate = useNavigate();
+    useEffect(() => {
+        const fetchProjectDetails = async () => {
+            try {
+                const details = await getProjectDetails(projectAddress);
+                setProjectDetails(details);
+                const cid = JSON.stringify(details["6"]);
+                const imgFetchUrl = `https://${cid}.ipfs.w3s.link/proof.jpg`;
+                const imageResponse = await fetch(imgFetchUrl);
+                if (imageResponse.ok) {
+                    setProofImage(imgFetchUrl); // Update the state
+                }
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching project details:", error);
+                setLoading(false);
+            }
+        };
+
+        if (projectAddress) {
+            fetchProjectDetails();
+        }
+    }, [projectAddress]);
 
     const handleUploadProofClick = () => {
         navigate(`/uploadProof/${projectAddress}`, {
@@ -82,7 +108,6 @@ export default function DonationPage() {
                 value: web3.utils.toWei(donationAmount, "ether"),
             });
 
-            console.log("Transaction:", transaction);
             alert("Donation successful!");
         } catch (error) {
             console.error("Error donating:", error);
@@ -141,7 +166,9 @@ export default function DonationPage() {
                     ) : (
                         <div className="donationSection">
                             <div className="donationBox">
-                                <div className="donationText">Donate amount:</div>
+                                <div className="donationText">
+                                    Donate amount:
+                                </div>
                                 <input
                                     className="donationInput"
                                     placeholder="Amount (Ether)"
@@ -186,6 +213,17 @@ export default function DonationPage() {
                 </div>
             </div>
             <div className="projectText">
+                <div className="imgproof">
+                    {proofImage ? (
+                        <img
+                            src={proofImage}
+                            alt="Proof of Completion"
+                            className="proofImage"
+                        />
+                    ) : (
+                        <p>No proof image available</p>
+                    )}
+                </div>
                 <div className="backgroundInfo">
                     <div className="backgroundHeading">
                         Background of the Sustainability Organization

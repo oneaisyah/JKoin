@@ -5,22 +5,19 @@ import "../styles/Homepage.css";
 import ProjectOverview from "./ProjectOverview";
 
 export default function Homepage({ projects, loading }) {
-    // const hardCodedCid =
-    //     "bafybeiecljye4dvylbmjd33bhqnrdb2xsejcy2oqdkufszselaqjjjis2a";
 
     function generateProjectsList() {
-        // console.log(projects);
         return projects.map((project, index) => (
             <ProjectOverview
                 key={index}
                 projectDate={`End Date: ${project.mergedJson.endDateObject}`}
-                projectAddress={project.mergedJson.projectAddress} // Replace with a meaningful value if available
-                projectTitle={project.mergedJson.projectName} // Map to the project name
-                projectDescription={project.mergedJson.projectDetails} // Map to project details
-                projectBackgroundInfo={project.mergedJson.backgroundInfo} // Map to background info
-                projectImage={project.image} // Use the image URL
-                projectOwner={project.mergedJson.projectOwner} // Replace with a meaningful value if available
-                isOwner={false} // Default or calculated value
+                projectAddress={project.mergedJson.projectAddress} 
+                projectTitle={project.mergedJson.projectName} 
+                projectDescription={project.mergedJson.projectDetails} 
+                projectBackgroundInfo={project.mergedJson.backgroundInfo} 
+                projectImage={project.image} 
+                projectOwner={project.mergedJson.projectOwner} 
+                isOwner={false} 
                 totalDonation={project.mergedJson.totalDonation}
                 goalAmount={project.mergedJson.goalAmount}
             />

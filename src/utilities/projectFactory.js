@@ -1,6 +1,5 @@
 import web3 from "./web3.js";
 
-// const abi = process.env.REACT_APP_CONTRACT_ABI;
 const abi = [
     {
         "inputs": [
@@ -65,22 +64,18 @@ const projectFactory = new web3.eth.Contract(abi, contractAddress);
 
 export const createProject = async (projectCID, goalAmountInWei, durationInSeconds, userAddress) => {
     try {
-        // Log the provided inputs
-        console.log("Creating project with inputs:", { projectCID, goalAmountInWei, durationInSeconds });
 
         // Estimate gas for the transaction
         const gasEstimate = await projectFactory.methods
             .createProject(projectCID, goalAmountInWei, durationInSeconds)
             .estimateGas({ from: userAddress });
 
-        console.log("Gas estimate:", gasEstimate);
 
         // Send the transaction using MetaMask
         const tx = await projectFactory.methods
             .createProject(projectCID, goalAmountInWei, durationInSeconds)
             .send({ from: userAddress, gas: gasEstimate });
 
-        console.log("Transaction successful:", tx);
         return tx.transactionHash;
     } catch (error) {
         console.error("Error in createProject:", error.message || error);
