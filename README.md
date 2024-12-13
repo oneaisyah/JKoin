@@ -17,3 +17,5 @@ Follow these steps to set up and run the project:
    cd <repository-folder>
    npm install
    npm run start
+
+2. Add the .env file we have submitted in edimensions to the root directory.
