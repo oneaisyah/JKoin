@@ -14,8 +14,9 @@ Follow these steps to set up and run the project:
 1. Clone the repository:
    ```bash
    git clone <repository-url>
+2. Add the .env file we have submitted in edimensions to the root directory, then run:
+   ```bash
    cd <repository-folder>
    npm install
    npm run start
 
-2. Add the .env file we have submitted in edimensions to the root directory.
