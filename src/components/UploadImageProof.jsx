@@ -35,8 +35,6 @@ export default function UploadImageProof() {
             const file = new File([proofPhoto], `proof.jpg`, { type: proofPhoto.type });
 
             const cid = await uploadFiles([file]);
-            console.log("CID:", cid);
-            console.log("CID toString:", cid.toString());
             return cid.toString();
         } catch (error) {
             console.error("Error uploading file:", error);
@@ -54,7 +52,6 @@ export default function UploadImageProof() {
             const contract = new web3.eth.Contract(projectABI, projectAddress);
 
             const transaction = await contract.methods.uploadProof(cid).send({ from: selectedAddress });
-            console.log("Transaction:", transaction);
             setUploadingError(false);
             alert("Proof uploaded successfully");
         }

@@ -1,6 +1,6 @@
 import web3 from "./web3.js";
 
-const abi = [
+const projectabi = [
     {
         "inputs": [],
         "name": "getProjectDetails",
@@ -48,15 +48,15 @@ const abi = [
 ];
 
 
-async function donateFund() {
+async function getProjectDetails(address) {
     if (!web3) {
         console.error("Web3 is not initialized or address is invalid.");
         return null;
     }
-    const contract = new web3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
+    const contract = new web3.eth.Contract(projectabi, address);
 
     const projectDetails = await contract.methods.getProjectDetails().call();
-    console.log("Project Details:", projectDetails);
+    return projectDetails
 }
 
 async function withdrawFunds(projectAddress) {
@@ -67,27 +67,16 @@ async function withdrawFunds(projectAddress) {
 
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
     const account = accounts[0];
-    // const projectFactory = new web3.eth.Contract(projectFactoryABI, process.env.REACT_APP_CONTRACT_ADDRESS);
-
-    // const projectAddress = await projectFactory.methods.getDeployedProjects().call();
-
-    // const contract = new web3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
-    const contract = new web3.eth.Contract(abi, projectAddress);
+    const contract = new web3.eth.Contract(projectabi, projectAddress);
 
     try {
-        // const canWithdraw = await contract.methods.withdraw().call();
-        // if (!canWithdraw) {
-        //     console.log("Withdrawal is not allowed at this time.");
-        //     return;
-        // }
-
         const transaction = await contract.methods.withdraw().send({ from: account })
-        .then(receipt => {
-            console.log("Transaction successful!", receipt);
-        })
-        .catch(error => {
-            console.error("Error in transaction:", error);
-        });
+            .then(receipt => {
+                console.log("Transaction successful!", receipt);
+            })
+            .catch(error => {
+                console.error("Error in transaction:", error);
+            });
         console.log("Withdraw successful:", transaction);
     } catch (error) {
         console.error("Error withdrawing funds:", error);
@@ -103,7 +92,7 @@ async function requestRefund() {
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
     const account = accounts[0];
 
-    const contract = new web3.eth.Contract(abi, process.env.REACT_APP_CONTRACT_ADDRESS);
+    const contract = new web3.eth.Contract(projectabi, process.env.REACT_APP_CONTRACT_ADDRESS);
 
     try {
         const refundActive = await contract.methods.isRefundActive().call();
@@ -120,5 +109,5 @@ async function requestRefund() {
 }
 
 // Export the functions and constants for reuse
-export { donateFund, requestRefund, withdrawFunds };
+export { getProjectDetails, requestRefund, withdrawFunds };
 

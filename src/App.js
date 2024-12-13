@@ -21,21 +21,16 @@ function App() {
     async function fetchProjects() {
         try {
             const projectAddresses = await getAllProjectAddresses();
-            
-       
-            // Step 2: Fetch images for each project
             const projectsDetails = await Promise.allSettled(
                 projectAddresses.map(async (address) => {
                     const { endDateObject, projectCID , projectTotalDonation, projectOwner} =
                         await getCIDAndEndDateFromAddress(address);
                     const projectTotalDonationInEther = Web3.utils.fromWei(projectTotalDonation, 'ether');  
-                    console.log("from getCIDandEndDate",endDateObject, projectCID, projectTotalDonationInEther, projectOwner);
-                    console.log(`Address: ${address}, CID and EndDate:`, { endDateObject, projectCID, projectTotalDonationInEther });
                     const { imageUrl, jsonData } = await fetchDataFromCID(
                         projectCID
                     );
                     const mergedJson = { ...jsonData, endDateObject, projectAddress: address, totalDonation: projectTotalDonationInEther, projectOwner: projectOwner };
-                    console.log(`mergedJson:${JSON.stringify(mergedJson)}`);
+                    
                     return { image: imageUrl ,mergedJson };
                 })
             );
@@ -43,8 +38,6 @@ function App() {
             const successfulProjects = projectsDetails
                 .filter((result) => result.status === "fulfilled")
                 .map((result) => result.value);
-            // console.log("projectsDetails array:", projectsDetails);
-            // console.log("successfulProjects array:", successfulProjects);
             setProjects(successfulProjects);
         } catch (error) {
             console.error("Error fetching projects:", error);
@@ -56,7 +49,6 @@ function App() {
       fetchProjects();
   }, []);
 
-  //insert api call to backend
   const projectData = {
     projectDateArr: JSON.parse(process.env.REACT_APP_PROJECT_DATEARR),
     projectTitleArr: JSON.parse(process.env.REACT_APP_PROJECT_TITLEARR),

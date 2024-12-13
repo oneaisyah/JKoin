@@ -40,26 +40,13 @@ export default function CreateProjectPage() {
             const filesToUpload = [renamedCoverPhoto, formDataJson];
 
             const projectCID = await uploadFiles(filesToUpload);
-            // console.log("Uploaded projectCID:", projectCID);
-            // console.log(projectCID.toString());
-            // const coverPhotoObject = await uploadFiles(renamedCoverPhoto);
-            // const coverPhotoCID = coverPhotoObject.toString();
-            // console.log(coverPhotoCID);
             const durationInSeconds = projectDuration * 24 * 60 * 60;
-            // console.log("Inputs for createProject:", {
-            //     projectCID: projectCID,
-            //     goalAmount,
-            //     durationInSeconds,
-            // });
-            // Call the createProject function with the mapped data
             const txHash = await createProject(
                 projectCID.toString(),
                 goalAmount,
                 durationInSeconds,
                 userAddress
             );
-
-            // console.log("Transaction Hash:", txHash);
         } catch (err) {
             console.error("Error creating project:", err);
         }
