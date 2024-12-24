@@ -1,4 +1,23 @@
-# Project Name
+# JKoin 🌍
+
+## Overview
+**JKoin** is a decentralized crowdfunding platform designed to support sustainability-focused projects. Built on blockchain technology, it ensures transparency and trust between donors and project organizers.
+
+## How It Works
+1. **Project Creation**: Organizations create projects and specify funding goals and deadlines.
+2. **Donation**: Donors contribute to projects via smart contracts.
+3. **Proof Submission**: Organizations submit evidence of project completion (e.g., images, documents).
+4. **Review Period**: Donors review the proof and vote to release or deny funds.
+5. **Fund Distribution**: Approved funds are released to the organization. If denied, donors can withdraw their contributions.
+
+Below is the sequence diagram illustrating the workflow of JKoin:
+
+![JKoin Workflow](sequence_diagram.png)
+
+## Tech Stack
+- **Frontend**: React.js
+- **Blockchain**: Solidity, Web3.js
+- **Database**: IPFS (for proof storage)
 
 ## Getting Started
 
