@@ -3,6 +3,15 @@
 ## Overview
 **JKoin** is a decentralized crowdfunding platform designed to support sustainability-focused projects. Built on blockchain technology, it ensures transparency and trust between donors and project organizers.
 
+## 👥 Team Members
+
+- **[Wan 'Aisyah](https://github.com/oneaisyah)**
+- **[Lim Jun Kiat](https://github.com/limjk5)**
+- **[Shelen Go](https://github.com/ShelenGo)**
+- **[Gan Chin Song](https://github.com/jsonggan)**
+- **[Wong Oishin](https://github.com/shinz2307)**
+
+
 ## How It Works
 1. **Project Creation**: Organizations create projects and specify funding goals and deadlines.
 2. **Donation**: Donors contribute to projects via smart contracts.
